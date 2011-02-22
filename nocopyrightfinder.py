@@ -33,8 +33,7 @@ def checkFiles (arg, dirname, names):
 				else:
 					bad.append(path)
 
-os.path.walk('.', checkFiles, 0)
-#os.path.walk('../../', checkFiles, 0)
+os.path.walk('../../', checkFiles, 0)
 
 if len(bad) > 0:
 	print "The following have no copyright:"
@@ -47,3 +46,8 @@ if len(good) > 0:
 	print "The following have a copyright:"
 	for i in sorted(good):
 		print "+", i
+
+sum = len(good) + len(bad)
+
+print
+print "That are only "+str(len(good)*100/sum)+"% of your files."

@@ -10,7 +10,7 @@ cPatterns = []
 for pattern in patterns:
 	cPatterns.append(re.compile(pattern))
 
-copypattern1 = re.compile('.*Copyright \\(c\\)\\s?\\d* Martin Ueding \\<dev\\@martin-ueding\\.de\\>.*')
+copypattern1 = re.compile('.*Copyright \\(c\\)\\s?(\\d*) Martin Ueding \\<dev\\@martin-ueding\\.de\\>.*')
 copypattern2 = re.compile('.*Martin Ueding.*')
 
 good = []
@@ -22,15 +22,18 @@ def checkFiles (arg, dirname, names):
 		for pattern in cPatterns:
 			if pattern.match(name) != None:
 				copyright = 0
+				year = ""
 
 				with open(path, 'r') as script:
 					for i in range(0, 5):
 						line = script.readline()
-						if copypattern1.match(line) != None:
+						match = copypattern1.match(line)
+						if match != None:
 							copyright = 1
+							year = match.group(1)
 
 				if copyright == 1:
-					good.append(path)
+					good.append([path, year])
 				else:
 					bad.append(path)
 
@@ -47,7 +50,7 @@ if len(sys.argv) == 2 and sys.argv[1] == "-h":
 	if len(good) > 0:
 		print "The following have a copyright notice:"
 		for i in sorted(good):
-			print "+", i
+			print "+", i[0], "("+i[1]+")"
 
 	sum = len(good) + len(bad)
 

@@ -3,6 +3,7 @@
 
 import os.path
 import re
+import sys
 
 patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$', '.*\\.html$', '.*\\.js$']
 cPatterns = []
@@ -35,6 +36,24 @@ def checkFiles (arg, dirname, names):
 
 os.path.walk('../../', checkFiles, 0)
 
-for i in sorted(bad):
-	print i
+if len(sys.argv) == 2 and sys.argv[1] == "-h":
+	if len(bad) > 0:
+		print "The following have no copyright notice:"
+		for i in sorted(bad):
+			print "-", i
 
+		print
+
+	if len(good) > 0:
+		print "The following have a copyright notice:"
+		for i in sorted(good):
+			print "+", i
+
+	sum = len(good) + len(bad)
+
+	print
+	print "That are only "+str(len(good)*100/sum)+"% of your files."
+
+else:
+	for i in bad:
+		print i

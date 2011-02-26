@@ -5,7 +5,7 @@ import os.path
 import re
 import sys
 
-patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$', '.*\\.html$', '.*\\.js$']
+patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$', '.*\\.html$', '.*\\.js$', '.*\\.sh$']
 cPatterns = []
 for pattern in patterns:
 	cPatterns.append(re.compile(pattern))

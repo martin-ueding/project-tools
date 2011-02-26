@@ -57,6 +57,12 @@ if len(sys.argv) == 2 and sys.argv[1] == "-h":
 	print
 	print "That are only "+str(len(good)*100/sum)+"% of your files."
 
+elif len(sys.argv) == 2 and sys.argv[1] == "-g":
+	for i in good:
+		print i[0]
+elif len(sys.argv) == 2 and sys.argv[1] == "-b":
+	for i in bad:
+		print i
 else:
 	for i in bad:
 		print i

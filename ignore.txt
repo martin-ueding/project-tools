@@ -1,4 +1,6 @@
 /PHPMailer_v2.0.4/
+/lp-personalphpbookmark/trunk/inc/streams.php
+/lp-personalphpbookmark/trunk/inc/gettext.php
 /jquery-1.4.4.min.js
 /jquery-1.5.min.js
 /jquery.easing.1.3.js

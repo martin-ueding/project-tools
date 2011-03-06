@@ -4,6 +4,16 @@
 import os.path
 import re
 import sys
+import optparse
+
+parser = optparse.OptionParser("usage: %prog")
+parser.add_option("--human", dest="human", action="store_true", default=False, help="human readable output")
+parser.add_option("-g", dest="good", action="store_true", default=False, help="show only with copyright")
+parser.add_option("-b", dest="bad", action="store_true", default=False, help="show only files without copyright [default]")
+parser.add_option("--no-year", dest="noyear", action="store_true", default=False, help="show only files without a year in the copyright")
+parser.add_option("--add", dest="add", action="store_true", default=False, help="interactively add copyright to the files")
+(options, args) = parser.parse_args()
+del parser
 
 patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$', '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$']
 cPatterns = []
@@ -47,30 +57,42 @@ def checkFiles (arg, dirname, names):
 
 os.path.walk('../../', checkFiles, 0)
 
-if len(sys.argv) == 2 and sys.argv[1] == "-h":
+if options.human:
+	good.sort()
+	bad.sort()
 	if len(bad) > 0:
 		print "The following have no copyright notice:"
-		for i in sorted(bad):
+		for i in bad:
 			print "-", i
 
 		print
 
 	if len(good) > 0:
+		print "The following have a copyright notice but no year:"
+		for i in good:
+			if i[1] == "":
+				print "+", i[0], "("+i[1]+")"
+
 		print "The following have a copyright notice:"
-		for i in sorted(good):
-			print "+", i[0], "("+i[1]+")"
+		for i in good:
+			if i[1] != "":
+				print "+", i[0], "("+i[1]+")"
 
 	sum = len(good) + len(bad)
 
 	print
-	print "That are only "+str(len(good)*100/sum)+"% of your files."
+	print str(len(good)*100/sum)+"% of your files have a copyright"
 
-elif len(sys.argv) == 2 and sys.argv[1] == "-g":
+elif options.good:
 	for i in good:
 		print i[0]
-elif len(sys.argv) == 2 and sys.argv[1] == "-b":
+elif options.bad:
 	for i in bad:
 		print i
+elif options.noyear:
+	for i in good:
+		if i[1] == "":
+			print i[0]
 else:
 	for i in bad:
 		print i

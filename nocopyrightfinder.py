@@ -10,6 +10,11 @@ cPatterns = []
 for pattern in patterns:
 	cPatterns.append(re.compile(pattern))
 
+ignorepatterns = []
+with open("ignore.txt") as ifile:
+	for line in ifile:
+		ignorepatterns.append(line[:-1])
+
 copypattern1 = re.compile('.*Copyright \\(c\\)\\s?(\\d*) Martin Ueding \\<dev\\@martin-ueding\\.de\\>.*')
 copypattern2 = re.compile('.*Martin Ueding.*')
 
@@ -19,23 +24,26 @@ bad = []
 def checkFiles (arg, dirname, names):
 	for name in names:
 		path = dirname+'/'+name
-		for pattern in cPatterns:
-			if pattern.match(name) != None:
-				copyright = 0
-				year = ""
 
-				with open(path, 'r') as script:
-					for i in range(0, 5):
-						line = script.readline()
-						match = copypattern1.match(line)
-						if match != None:
-							copyright = 1
-							year = match.group(1)
+		if not any(ignore in path for ignore in ignorepatterns):
 
-				if copyright == 1:
-					good.append([path, year])
-				else:
-					bad.append(path)
+			for pattern in cPatterns:
+				if pattern.match(name) != None:
+					copyright = 0
+					year = ""
+
+					with open(path, 'r') as script:
+						for i in range(0, 5):
+							line = script.readline()
+							match = copypattern1.match(line)
+							if match != None:
+								copyright = 1
+								year = match.group(1)
+
+					if copyright == 1:
+						good.append([path, year])
+					else:
+						bad.append(path)
 
 os.path.walk('../../', checkFiles, 0)
 

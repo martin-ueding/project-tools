@@ -81,15 +81,19 @@ def addcopyright(files):
 
 
 def main():
-	parser = optparse.OptionParser("usage: %prog")
+	parser = optparse.OptionParser("usage: %prog repository")
 	parser.add_option("--human", dest="human", action="store_true", default=False, help="human readable output")
 	parser.add_option("-g", dest="good", action="store_true", default=False, help="show only with copyright")
 	parser.add_option("-b", dest="bad", action="store_true", default=False, help="show only files without copyright [default]")
 	parser.add_option("--no-year", dest="noyear", action="store_true", default=False, help="show only files without a year in the copyright")
 	parser.add_option("--add", dest="add", action="store_true", default=False, help="interactively add copyright to the files")
-	parser.add_option("--relax", dest="relax", action="store_true", default=False, help="also accept 'Martin Ueding <dev@martin-ueding.de>")
+	parser.add_option("--relax", dest="relax", action="store_true", default=False, help="also accept second pattern")
 	(options, args) = parser.parse_args()
 	del parser
+
+	if len(args) != 1:
+		print "please supply a repository path with your files"
+		sys.exit(1)
 
 	
 	ignorepatterns = []
@@ -97,8 +101,13 @@ def main():
 		for line in ifile:
 			ignorepatterns.append(line[:-1])
 
-	copypattern1 = re.compile('.*Copyright \\(c\\)\\s?(\\d*) Martin Ueding \\<dev\\@martin-ueding\\.de\\>.*')
-	copypattern2 = re.compile('.*Martin Ueding \\<dev\\@martin-ueding\\.de\\>.*')
+	copypatterns = []
+	with open("patterns.txt") as patternfile:
+		for line in patternfile:
+			copypatterns.append(line[:-1])
+			
+	copypattern1 = re.compile(copypatterns[0])
+	copypattern2 = re.compile(copypatterns[1])
 
 	good = []
 	bad = []
@@ -131,7 +140,7 @@ def main():
 						else:
 							bad.append(path)
 
-	os.path.walk('../../', checkFiles, 0)
+	os.path.walk(args[0], checkFiles, 0)
 
 	if options.human:
 		good.sort()

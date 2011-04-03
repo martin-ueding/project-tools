@@ -97,12 +97,12 @@ def main():
 
 	
 	ignorepatterns = []
-	with open("ignore.txt") as ifile:
+	with open(os.path.expanduser("~/.nocopyrightfinder/ignore.txt")) as ifile:
 		for line in ifile:
 			ignorepatterns.append(line[:-1])
 
 	copypatterns = []
-	with open("patterns.txt") as patternfile:
+	with open(os.path.expanduser("~/.nocopyrightfinder/patterns.txt")) as patternfile:
 		for line in patternfile:
 			copypatterns.append(line[:-1])
 			

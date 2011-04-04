@@ -97,14 +97,21 @@ def main():
 
 	
 	ignorepatterns = []
-	with open(os.path.expanduser("~/.nocopyrightfinder/ignore.txt")) as ifile:
-		for line in ifile:
-			ignorepatterns.append(line[:-1])
+	try:
+		with open(os.path.expanduser("~/.nocopyrightfinder/ignore.txt")) as ifile:
+			for line in ifile:
+				ignorepatterns.append(line[:-1])
+	except IOError:
+		pass
 
 	copypatterns = []
-	with open(os.path.expanduser("~/.nocopyrightfinder/patterns.txt")) as patternfile:
-		for line in patternfile:
-			copypatterns.append(line[:-1])
+	try:
+		with open(os.path.expanduser("~/.nocopyrightfinder/patterns.txt")) as patternfile:
+			for line in patternfile:
+				copypatterns.append(line[:-1])
+	except IOError:
+		print "file with copyright patterns could not be loaded"
+		sys.exit(1)
 			
 	copypattern1 = re.compile(copypatterns[0])
 	copypattern2 = re.compile(copypatterns[1])

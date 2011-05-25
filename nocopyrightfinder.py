@@ -47,7 +47,7 @@ def addcopyright(files):
 			newlineafter = False
 
 
-		if comment == None:
+		if comment is None:
 			print "ERROR: no comment chosen"
 			continue
 

@@ -6,6 +6,8 @@
 
 echo "	files	lines	chars"
 
+# FIXME program blocks when there is no such file
+
 for suffix in java php css js html py sh cpp c
 do
 	lines=$(cat `cat good | egrep "\\.$suffix$"` | wc -l)

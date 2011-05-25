@@ -7,7 +7,7 @@ import sys
 import optparse
 import readline
 
-patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$', '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$']
+patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$', '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$', '.*\\.c$']
 cPatterns = []
 for pattern in patterns:
 	cPatterns.append(re.compile(pattern))

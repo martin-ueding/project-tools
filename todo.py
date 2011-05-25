@@ -37,7 +37,7 @@ def checkFiles (arg, dirname, names):
 		if not any(ignore in path for ignore in ignorepatterns):
 
 			for pattern in cPatterns:
-				if pattern.match(name) != None:
+				if pattern.match(name) is not None:
 
 					with open(path, 'r') as script:
 						nameprinted = False
@@ -45,7 +45,7 @@ def checkFiles (arg, dirname, names):
 							
 							for cc in cCommentpatterns:
 								match = cc.match(line)
-								if match != None:
+								if match is not None:
 									if not nameprinted:
 										print
 										print path

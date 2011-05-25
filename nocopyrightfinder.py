@@ -28,20 +28,20 @@ def addcopyright(files):
 		print "I will add a",
 		comment = None
 		newlineafter = True
-		if cPatterns[3].match(f) != None or cPatterns[4].match(f) != None or cPatterns[7].match(f) != None:
+		if cPatterns[3].match(f) is not None or cPatterns[4].match(f) is not None or cPatterns[7].match(f) is not None:
 			print "#",
 			comment = "# %s"
-		elif cPatterns[0].match(f) != None or cPatterns[2].match(f) != None or cPatterns[6].match(f) != None:
+		elif cPatterns[0].match(f) is not None or cPatterns[2].match(f) is not None or cPatterns[6].match(f) is not None:
 			print "//",
 			comment = "// %s"
-		elif cPatterns[8].match(f) != None:
+		elif cPatterns[8].match(f) is not None:
 			print "/* */",
 			comment = "/* %s */"
-		elif cPatterns[1].match(f) != None:
+		elif cPatterns[1].match(f) is not None:
 			print "<?PHP /* */ ?>",
 			comment = "<?PHP /* %s */ ?>"
 			newlineafter = False
-		elif cPatterns[5].match(f) != None:
+		elif cPatterns[5].match(f) is not None:
 			print "<!-- -->",
 			comment = "<!-- %s -->"
 			newlineafter = False
@@ -126,7 +126,7 @@ def main():
 			if not any(ignore in path for ignore in ignorepatterns):
 
 				for pattern in cPatterns:
-					if pattern.match(name) != None:
+					if pattern.match(name) is not None:
 						copyright = 0
 						year = ""
 
@@ -134,12 +134,12 @@ def main():
 							for i in range(0, 5):
 								line = script.readline()
 								match = copypattern1.match(line)
-								if match != None:
+								if match is not None:
 									copyright = 1
 									year = match.group(1)
 
 								if options.relax:
-									if copypattern2.match(line) != None:
+									if copypattern2.match(line) is not None:
 										copyright = 1
 
 						if copyright == 1:

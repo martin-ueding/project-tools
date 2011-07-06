@@ -1,2 +1,0 @@
-.*Copyright \(c\)\s?(\d*) YOURNAME \<NAME\@HOST\.TLD\>.*
-.*YOURNAME \<NAME\@HOST\.TLD\>.*

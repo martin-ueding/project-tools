@@ -8,7 +8,8 @@ import optparse
 import readline
 import time
 
-patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$', '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$']
+patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$',
+            '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$']
 cPatterns = []
 
 words = ["(TODO .*)", "(HACK .*)", "(FIXME .*)", "(XXX .*)"]
@@ -62,7 +63,8 @@ def main():
             for line in ifile:
                 ignorepatterns.append(line[:-1])
 
-    print "TODO List generated at",time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    print "TODO List generated at",time.strftime("%Y-%m-%d %H:%M:%S",
+                                                 time.localtime())
     
     os.path.walk('.', checkFiles, 0)
 

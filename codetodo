@@ -16,10 +16,10 @@ words = ["(TODO .*)", "(HACK .*)", "(FIXME .*)", "(XXX .*)"]
 
 commentpatterns = []
 for w in words:
-    commentpatterns.append("\\s+//\\s+"+w+"$")  
-    commentpatterns.append("\\s+#\\s+"+w+"$")   
-    commentpatterns.append("\\s+/\\*\\s+"+w+"\\*/$")    
-    commentpatterns.append("\\s+<--\\s+"+w+"-->$")  
+    commentpatterns.append("\\s*//\\s+"+w+"$")  
+    commentpatterns.append("\\s*#\\s+"+w+"$")   
+    commentpatterns.append("\\s*/\\*\\s+"+w+"\\*/$")    
+    commentpatterns.append("\\s*<--\\s+"+w+"-->$")  
 
 cCommentpatterns = []
 

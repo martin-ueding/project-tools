@@ -54,9 +54,6 @@ def checkFiles (arg, dirname, names):
                                     print str(i).rjust(4), match.group(1)
 
 
-
-
-
 def main():
     if os.path.exists("ignore.txt"):
         with open("ignore.txt") as ifile:

@@ -6,7 +6,6 @@ import re
 import sys
 import optparse
 import readline
-import time
 
 patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$',
             '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$']
@@ -60,9 +59,6 @@ def main():
             for line in ifile:
                 ignorepatterns.append(line[:-1])
 
-    print "TODO List generated at",time.strftime("%Y-%m-%d %H:%M:%S",
-                                                 time.localtime())
-    
     os.path.walk('.', checkFiles, 0)
 
 if __name__ == "__main__":

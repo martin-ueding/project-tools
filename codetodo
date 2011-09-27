@@ -30,6 +30,8 @@ for pattern in patterns:
 for pattern in commentpatterns:
     cCommentpatterns.append(re.compile(pattern))
 
+first = True
+
 def checkFiles (arg, dirname, names):
     for name in names:
         path = dirname+'/'+name
@@ -47,7 +49,10 @@ def checkFiles (arg, dirname, names):
                                 match = cc.match(line)
                                 if match is not None:
                                     if not nameprinted:
-                                        print
+                                        global first
+                                        if not first:
+                                            print
+                                        first = False
                                         print path
                                         nameprinted = True
                                     print str(i).rjust(4), match.group(1)

@@ -4,4 +4,17 @@
 set -e
 set -u
 
+for arg
+do
+	if [[ ! -d "$arg/.git" ]]
+	then
+		continue
+	fi
 
+	tag_count=$(git tag | wc -l)
+
+	if (( tag_count == 0 ))
+	then
+		echo "No tags in $arg"
+	fi
+done

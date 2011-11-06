@@ -11,7 +11,7 @@ do
 		continue
 	fi
 
-	tag_count=$(git tag | wc -l)
+	tag_count="$(cd "$arg" && git tag | wc -l)"
 
 	if (( tag_count == 0 ))
 	then

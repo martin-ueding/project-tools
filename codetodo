@@ -7,6 +7,8 @@ import sys
 import optparse
 import readline
 
+# FIXME Do something about scripts that have no extension.
+
 patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$',
             '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$']
 cPatterns = []

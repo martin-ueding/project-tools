@@ -11,7 +11,8 @@ do
 	cd "$startdir"
 	cd "$folder"
 
-	if [[ ! -d ".git" ]] then
+	if [[ ! -d ".git" ]]
+	then
 		continue
 	fi
 

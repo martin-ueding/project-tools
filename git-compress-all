@@ -4,4 +4,20 @@
 set -e
 set -u
 
+startdir="$(pwd)"
 
+for folder in */
+do
+	cd "$startdir"
+	cd "$folder"
+
+	if [[ ! -d ".git" ]] then
+		continue
+	fi
+
+	echo "$folder"
+	du -s .git
+	git gc
+	du -s .git
+	echo
+done

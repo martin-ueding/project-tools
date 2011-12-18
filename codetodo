@@ -10,7 +10,7 @@ import readline
 # FIXME Do something about scripts that have no extension.
 
 patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$',
-            '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$']
+            '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$', '.*\\.ctp$']
 cPatterns = []
 
 words = ["(TODO .*)", "(HACK .*)", "(FIXME .*)", "(XXX .*)"]

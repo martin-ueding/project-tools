@@ -6,5 +6,8 @@
 from distutils.core import setup
 
 setup(
+    author = "Martin Ueding",
+    author_email = "dev@martin-ueding.de",
+    name = "codetodo",
     scripts = ["codetodo"],
 )

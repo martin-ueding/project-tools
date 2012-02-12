@@ -10,4 +10,5 @@ setup(
     author_email = "dev@martin-ueding.de",
     name = "codetodo",
     scripts = ["codetodo"],
+    version = "1.0",
 )

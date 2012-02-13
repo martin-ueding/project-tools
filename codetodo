@@ -8,6 +8,7 @@ import subprocess
 import prettytable
 
 comments = [r"//", r"#", r"/\*", r"<--"]
+end_comments = [r"\*/", "-->"]
 
 keywords = ["TODO", "HACK", "FIXME", "XXX"]
 
@@ -26,7 +27,7 @@ def main():
         parts = grep_line.split(":", 2)
         finding.append(os.path.normpath(parts[0]))
         finding.append(int(parts[1]))
-        m = re.match(r".*(%s)(.*)" % '|'.join(keywords), parts[2])
+        m = re.match(r"^.*(%s):?(.*?)(%s)?$" % ('|'.join(keywords), '|'.join(end_comments)), parts[2])
         if not m is None:
             finding.append(m.group(1).strip())
             finding.append(m.group(2).strip())

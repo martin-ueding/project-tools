@@ -9,6 +9,7 @@ setup(
     author = "Martin Ueding",
     author_email = "dev@martin-ueding.de",
     name = "codetodo",
+    requires = ["prettytable"],
     scripts = ["codetodo"],
     version = "1.0",
 )

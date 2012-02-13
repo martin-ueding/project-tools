@@ -1,72 +1,40 @@
 #!/usr/bin/python
 # Copyright (c) 2010 Martin Ueding <dev@martin-ueding.de>
 
-import os
+import os.path
 import re
-import sys
-import optparse
-import readline
+import subprocess
 
-# FIXME Do something about scripts that have no extension.
+import prettytable
 
-patterns = ['.*\\.java$', '.*\\.php$', '.*\\.cpp$', '.*\\.py$', '^makefile$',
-            '.*\\.html$', '.*\\.js$', '.*\\.sh$', '.*\\.css$', '.*\\.ctp$']
-cPatterns = []
+comments = [r"//", r"#", r"/\*", r"<--"]
 
-words = ["(TODO .*)", "(HACK .*)", "(FIXME .*)", "(XXX .*)"]
+keywords = ["TODO", "HACK", "FIXME", "XXX"]
 
-commentpatterns = []
-for w in words:
-    commentpatterns.append("\\s*//\\s+"+w+"$")  
-    commentpatterns.append("\\s*#\\s+"+w+"$")   
-    commentpatterns.append("\\s*/\\*\\s+"+w+"\\*/$")    
-    commentpatterns.append("\\s*<--\\s+"+w+"-->$")  
-
-cCommentpatterns = []
-
-ignorepatterns = []
-
-for pattern in patterns:
-    cPatterns.append(re.compile(pattern))
-
-for pattern in commentpatterns:
-    cCommentpatterns.append(re.compile(pattern))
-
-first = True
-
-def checkFiles (arg, dirname, names):
-    for name in names:
-        path = dirname+'/'+name
-
-        if not any(ignore in path for ignore in ignorepatterns):
-
-            for pattern in cPatterns:
-                if pattern.match(name) is not None:
-
-                    with open(path, 'r') as script:
-                        nameprinted = False
-                        for i, line in enumerate(script):
-                            
-                            for cc in cCommentpatterns:
-                                match = cc.match(line)
-                                if match is not None:
-                                    if not nameprinted:
-                                        global first
-                                        if not first:
-                                            print
-                                        first = False
-                                        print path
-                                        nameprinted = True
-                                    print str(i).rjust(4), match.group(1)
-
+def get_regex():
+    return r"(%s)\s*(%s)" % ("|".join(comments), "|".join(keywords))
 
 def main():
-    if os.path.exists("ignore.txt"):
-        with open("ignore.txt") as ifile:
-            for line in ifile:
-                ignorepatterns.append(line[:-1])
+    grep_output = subprocess.check_output(["grep", "-RIEn", get_regex(), "."])
 
-    os.path.walk(os.getcwd(), checkFiles, 0)
+    grep_lines = grep_output.split("\n")
+
+    findings = []
+
+    for grep_line in grep_lines[:-1]:
+        finding = []
+        parts = grep_line.split(":", 2)
+        finding.append(os.path.normpath(parts[0]))
+        finding.append(int(parts[1]))
+        m = re.match(r".*(%s)(.*)" % '|'.join(keywords), parts[2])
+        if not m is None:
+            finding.append(m.group(1).strip())
+            finding.append(m.group(2).strip())
+
+
+        findings.append(finding)
+
+    prettytable.print_table(["File", "#", "Type", "Text"], findings)
 
 if __name__ == "__main__":
     main()

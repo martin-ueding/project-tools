@@ -34,7 +34,23 @@ def main():
 
         findings.append(finding)
 
-    prettytable.print_table(["File", "#", "Type", "Text"], findings)
+    files = {}
+    for finding in findings:
+        if not finding[0] in files:
+            files[finding[0]] = []
+
+        files[finding[0]].append(finding[1:])
+
+    first = True
+
+    for filename, tasks in files.items():
+        if first:
+            first = False
+        else:
+            print
+
+        print filename
+        prettytable.print_table(None, tasks)
 
 if __name__ == "__main__":
     main()

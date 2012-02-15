@@ -1,6 +1,12 @@
 #!/usr/bin/python
 # Copyright (c) 2010 Martin Ueding <dev@martin-ueding.de>
 
+"""
+Goes through text based files and searches for C{TODO}, C{FIXME} and the like
+comments. It strips the comment from it, categorizes them in the different tags
+and gives a table for each file with hits.
+"""
+
 import os.path
 import re
 import subprocess

@@ -22,42 +22,46 @@ def get_regex():
     return r"(%s)\s*(%s)" % ("|".join(comments), "|".join(keywords))
 
 def main():
-    grep_output = subprocess.check_output(["grep", "-RIEn", get_regex(), "."])
+    try:
+        grep_output = subprocess.check_output(["grep", "-RIEn", get_regex(), "."])
+    except subprocess.CalledProcessError as e:
+        if e.returncode == 2:
+            print e
+    else:
+        grep_lines = grep_output.split("\n")
 
-    grep_lines = grep_output.split("\n")
+        findings = []
 
-    findings = []
-
-    for grep_line in grep_lines[:-1]:
-        finding = []
-        parts = grep_line.split(":", 2)
-        finding.append(os.path.normpath(parts[0]))
-        finding.append(int(parts[1]))
-        m = re.match(r"^.*(%s):?(.*?)(%s)?$" % ('|'.join(keywords), '|'.join(end_comments)), parts[2])
-        if not m is None:
-            finding.append(m.group(1).strip())
-            finding.append(m.group(2).strip())
+        for grep_line in grep_lines[:-1]:
+            finding = []
+            parts = grep_line.split(":", 2)
+            finding.append(os.path.normpath(parts[0]))
+            finding.append(int(parts[1]))
+            m = re.match(r"^.*(%s):?(.*?)(%s)?$" % ('|'.join(keywords), '|'.join(end_comments)), parts[2])
+            if not m is None:
+                finding.append(m.group(1).strip())
+                finding.append(m.group(2).strip())
 
 
-        findings.append(finding)
+            findings.append(finding)
 
-    files = {}
-    for finding in findings:
-        if not finding[0] in files:
-            files[finding[0]] = []
+        files = {}
+        for finding in findings:
+            if not finding[0] in files:
+                files[finding[0]] = []
 
-        files[finding[0]].append(finding[1:])
+            files[finding[0]].append(finding[1:])
 
-    first = True
+        first = True
 
-    for filename, tasks in files.items():
-        if first:
-            first = False
-        else:
-            print
+        for filename, tasks in files.items():
+            if first:
+                first = False
+            else:
+                print
 
-        print filename
-        prettytable.print_table(None, tasks)
+            print filename
+            prettytable.print_table(None, tasks)
 
 if __name__ == "__main__":
     main()

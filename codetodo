@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (c) 2010 Martin Ueding <dev@martin-ueding.de>
+# Copyright (c) 2010, 2012 Martin Ueding <dev@martin-ueding.de>
 
 """
 Goes through text based files and searches for C{TODO}, C{FIXME} and the like
@@ -13,7 +13,7 @@ import subprocess
 
 import prettytable
 
-comments = [r"//", r"#", r"/\*", r"<--"]
+comments = [r"//", r"#", r"/\*", r"<!--"]
 end_comments = [r"\*/", "-->"]
 
 keywords = ["TODO", "HACK", "FIXME", "XXX"]

@@ -1,12 +1,12 @@
 #!/bin/bash
-# Copyright (c) 2011 Martin Ueding <dev@martin-ueding.de>
+# Copyright (c) 2011-2012 Martin Ueding <dev@martin-ueding.de>
 
 set -e
 set -u
 
 startdir="$(pwd)"
 
-for folder in */
+for folder in **/
 do
 	cd "$startdir"
 	cd "$folder"

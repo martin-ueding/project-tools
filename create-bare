@@ -1,0 +1,13 @@
+#!/bin/bash
+# Copyright © 2012 Martin Ueding <dev@martin-ueding.de>
+
+set -e
+set -u
+
+cd "$HOME/public_html/git"
+
+git init --bare "$1.git"
+
+cd "$1.git/hooks"
+
+mv post-update.sample post-update

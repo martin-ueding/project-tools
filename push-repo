@@ -9,7 +9,7 @@ for repo in "$@"
 do
 	cd "$HOME/Branches/$repo"
 
-	ssh chaos create-repo "$repo"
+	ssh chaos create-bare "$repo"
 
 	git remote add chaos "chaos:public_html/git/$repo.git"
 

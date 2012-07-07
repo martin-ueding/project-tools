@@ -4,6 +4,8 @@
 set -e
 set -u
 
+server_alias=chaos
+
 for repo in "$@"
 do
 	repofolder="$HOME/Branches/$repo"
@@ -24,7 +26,12 @@ do
 
 	ssh chaos create-bare "$repo"
 
-	git remote add chaos "chaos:public_html/git/$repo.git"
+	if git remote | grep "$server_alias"
+	then
+		echo "Notice: $repo already has remote $server_alias."
+	else
+		git remote add "$server_alias" "chaos:public_html/git/$repo.git"
+	fi
 
-	git push chaos --all
+	git push "$server_alias" --all
 done

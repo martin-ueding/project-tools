@@ -1,6 +1,9 @@
 #!/bin/bash
 # Copyright © 2012 Martin Ueding <dev@martin-ueding.de>
 
+# Copies a given git repository onto a remote server. It is assumed that you
+# have SSH access to the server.
+
 set -e
 set -u
 

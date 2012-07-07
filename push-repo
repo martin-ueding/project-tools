@@ -6,7 +6,15 @@ set -u
 
 for repo in "$@"
 do
-	cd "$HOME/Branches/$repo"
+	repofolder="$HOME/Branches/$repo"
+
+	if [[ ! -d "$repofolder" ]]
+	then
+		echo "Error: $repofolder does not exist. Skipping this repo."
+		continue
+	fi
+
+	cd "$repofolder"
 
 	ssh chaos create-bare "$repo"
 

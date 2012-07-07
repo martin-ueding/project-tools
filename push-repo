@@ -31,10 +31,11 @@ do
 
 	if git remote | grep "$server_alias"
 	then
-		echo "Notice: $repo already has remote $server_alias."
-	else
-		git remote add "$server_alias" "chaos:public_html/git/$repo.git"
+		echo "Notice: $repo already had remote $server_alias."
+		git remote rm "$server_alias"
 	fi
+
+	git remote add "$server_alias" "chaos:public_html/git/$repo.git"
 
 	git push "$server_alias" --all
 done

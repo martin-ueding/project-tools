@@ -6,8 +6,15 @@ set -u
 
 cd "$HOME/public_html/git"
 
-git init --bare "$1.git"
+reponame="$1.git"
 
-cd "$1.git/hooks"
+if [[ -d "$reponame" ]]
+then
+	echo "Notice: $reponame already exists."
+fi
+
+git init --bare "$reponame"
+
+cd "$reponame/hooks"
 
 mv post-update.sample post-update

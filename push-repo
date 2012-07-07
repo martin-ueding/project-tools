@@ -14,6 +14,12 @@ do
 		continue
 	fi
 
+	if [[ ! -d "$repofolder/.git" ]]
+	then
+		echo "Error: $repofolder is not a git repo. Skipping this repo."
+		continue
+	fi
+
 	cd "$repofolder"
 
 	ssh chaos create-bare "$repo"

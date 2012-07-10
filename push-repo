@@ -37,5 +37,5 @@ do
 
 	git remote add "$server_alias" "chaos:public_html/git/$repo.git"
 
-	git push "$server_alias" --all
+	git push "$server_alias" --mirror
 done

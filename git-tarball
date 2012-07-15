@@ -6,9 +6,7 @@ set -u
 
 version_regex="v(.+)"
 
-destination="$1"
-
-shift
+destination="$(git config --get tarball.destdir)"
 
 cwd="$(pwd)"
 

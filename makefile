@@ -7,8 +7,9 @@ git-tarball.1.gz: git-tarball.1
 	rst2man $< $@
 
 install:
-	if [ -f git-tarball.1.gz ]; then cp git-tarball.1.gz "$(DESTDIR)/usr/share/man/man1/"; fi
-	install git-tarball "$(DESTDIR)/usr/bin/"
+	if [ -f git-tarball.1.gz ]; then install -d "$(DESTDIR)/usr/share/man/man1/"; install -m 644 git-tarball.1.gz -t "$(DESTDIR)/usr/share/man/man1/"; fi
+	install -d "$(DESTDIR)/usr/bin/"
+	install git-tarball -t "$(DESTDIR)/usr/bin/"
 
 .PHONY: clean
 clean:

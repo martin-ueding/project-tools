@@ -16,7 +16,7 @@ SYNOPSIS
 
 ::
 
-    git tarball destination repo1 [repo2 ...]
+    git tarball repo1 [repo2 ...]
 
 DESCRIPTION
 ===========
@@ -30,7 +30,8 @@ be created, with all the files in it. That way, it is very easy for Debian
 packagers to package the program.
 
 The generated tarballs will be put into a folder with the name of the repo into
-a folder which is the first parameter.
+a folder which has to be specified in the git configuration file in key
+``tarball.destdir``.
 
 OPTIONS
 =======

@@ -39,7 +39,7 @@ do
 		then
 			version="${BASH_REMATCH[1]}"
 
-			tarball="$destination/$project/${project}_$version.tar"
+			tarball="$destination/$project/${project}_$version.tar.gz"
 
 			# If the tarball already exists, there is no need to recreate it.
 			if [[ -f "$tarball" ]]

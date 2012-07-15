@@ -4,7 +4,7 @@
 set -e
 set -u
 
-version_regex="v([\d\.]+)"
+version_regex="v(.+)"
 
 destination="$1"
 
@@ -14,6 +14,7 @@ cwd="$(pwd)"
 
 for repo in "$@"
 do
+	project="$(basename "$repo")"
 	cd "$cwd"
 
 	cd "$repo"
@@ -28,17 +29,29 @@ do
 
 	if [[ -z "$tags" ]]
 	then
-		echo "Warning: $repo has no tags, skipping…"
+		echo "Warning: $project has no tags, skipping…"
 		continue
 	fi
 
 	for tag in $tags
 	do
-		echo "Processing $tag…"
-
 		if [[ $tag =~ $version_regex ]]
 		then
 			version="${BASH_REMATCH[1]}"
+
+			tarball="$destination/$project/${project}_$version.tar"
+
+			# If the tarball already exists, there is no need to recreate it.
+			if [[ -f "$tarball" ]]
+			then
+				continue
+			fi
+
+			echo "Creating tarball for $version…"
+
+			mkdir -p "$destination/$project/"
+
+			git archive --prefix="$project-$version/" $tag | gzip > $tarball
 		fi
 	done
 done

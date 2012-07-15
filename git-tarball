@@ -4,6 +4,8 @@
 set -e
 set -u
 
+version_regex="v([\d\.]+)"
+
 destination="$1"
 
 shift
@@ -33,5 +35,10 @@ do
 	for tag in $tags
 	do
 		echo "Processing $tag…"
+
+		if [[ $tag =~ $version_regex ]]
+		then
+			version="${BASH_REMATCH[1]}"
+		fi
 	done
 done

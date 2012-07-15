@@ -18,13 +18,20 @@ do
 
 	if [[ ! -d .git ]]
 	then
-		echo "Warning: $repo is not a git repository, skipping …"
+		echo "Warning: $repo is not a git repository, skipping…"
 		continue
 	fi
 
 	tags=$(git tag)
 
+	if [[ -z "$tags" ]]
+	then
+		echo "Warning: $repo has no tags, skipping…"
+		continue
+	fi
+
 	for tag in $tags
 	do
+		echo "Processing $tag…"
 	done
 done

@@ -4,4 +4,27 @@
 set -e
 set -u
 
+destination="$1"
 
+shift
+
+cwd="$(pwd)"
+
+for repo in "$@"
+do
+	cd "$cwd"
+
+	cd "$repo"
+
+	if [[ ! -d .git ]]
+	then
+		echo "Warning: $repo is not a git repository, skipping …"
+		continue
+	fi
+
+	tags=$(git tag)
+
+	for tag in $tags
+	do
+	done
+done

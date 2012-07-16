@@ -31,5 +31,5 @@ install:
 
 .PHONY: clean
 clean:
-	$(RM) git-tarball.1
-	$(RM) git-tarball.1.gz
+	$(RM) *.1
+	$(RM) *.1.gz

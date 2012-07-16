@@ -13,7 +13,10 @@
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see http://www.gnu.org/licenses/.
 
-git-tarball.1.gz: git-tarball.1
+all: git-tarball.1.gz git-upload-tarballs.1.gz
+
+%.1.gz: %.1
+	$(RM) $@
 	gzip $<
 
 %.1: %.1.rst
@@ -21,8 +24,10 @@ git-tarball.1.gz: git-tarball.1
 
 install:
 	if [ -f git-tarball.1.gz ]; then install -d "$(DESTDIR)/usr/share/man/man1/"; install -m 644 git-tarball.1.gz -t "$(DESTDIR)/usr/share/man/man1/"; fi
+	if [ -f git-upload-tarballs.1.gz ]; then install -d "$(DESTDIR)/usr/share/man/man1/"; install -m 644 git-upload-tarballs.1.gz -t "$(DESTDIR)/usr/share/man/man1/"; fi
 	install -d "$(DESTDIR)/usr/bin/"
 	install git-tarball -t "$(DESTDIR)/usr/bin/"
+	install git-upload-tarballs -t "$(DESTDIR)/usr/bin/"
 
 .PHONY: clean
 clean:

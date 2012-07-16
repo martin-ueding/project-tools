@@ -19,3 +19,24 @@ set -u
 
 tarball_dir="$(git config --get tarball.destdir)"
 tarball_ftp="$(git config --get tarball.ftp)"
+
+filter_regex='.*_[0-9\.]+\.tar\.gz'
+
+cd "$tarball_dir/"
+
+for project in */
+do
+	cd "$tarball_dir/$project"
+
+	echo "$project"
+
+	for tarball in *.tar.gz
+	do
+		if [[ ! "$tarball" =~ $filter_regex ]]
+		then
+			continue
+		fi
+
+		curl --netrc --ftp-create-dirs --upload-file "$tarball" "$tarball_ftp$project"
+	done
+done

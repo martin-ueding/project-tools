@@ -26,8 +26,6 @@ cwd="$(pwd)"
 archive-tags() {
 	project="$1"
 
-	echo "$project"
-
 	tags=$(git tag)
 
 	if [[ -z "$tags" ]]
@@ -50,7 +48,7 @@ archive-tags() {
 				continue
 			fi
 
-			echo "Creating tarball for $version…"
+			echo "$project-$version"
 
 			mkdir -p "$destination/$project/"
 

@@ -16,7 +16,7 @@ SYNOPSIS
 
 ::
 
-    git tarball repo1 [repo2 ...]
+    git tarball [repo1 ...]
 
 DESCRIPTION
 ===========
@@ -36,26 +36,26 @@ a folder which has to be specified in the git configuration file in key
 OPTIONS
 =======
 
-EXIT STATUS
-===========
+You can supply a list of folders which are git repositories. If you do not supply any, the current repo will be used, with its directory name as the project name.
 
 ENVIRONMENT
 ===========
 
+It will use these keys from the ``.gitconfig``:
+
+- tarball.destdir
+- tarball.ftp
+
+It will use the ``.netrc`` file to determine username and password for the
+given FTP server.
+
 FILES
 =====
 
-CONFORMING TO
-=============
-
-NOTES
-=====
-
-BUGS
-====
-
-EXAMPLE
-=======
+- ``.gitconfig``
+- ``.netrc``
 
 SEE ALSO
 ========
+
+git-upload-tarballs(1)

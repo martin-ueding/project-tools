@@ -45,3 +45,8 @@ FILES
 
 - ``.gitconfig``
 - ``.netrc``
+
+SEE ALSO
+========
+
+git-tarball(1)

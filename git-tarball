@@ -23,18 +23,10 @@ destination="$(git config --get tarball.destdir)"
 
 cwd="$(pwd)"
 
-for repo in "$@"
-do
-	project="$(basename "$repo")"
-	cd "$cwd"
+archive-tags() {
+	project="$1"
 
-	cd "$repo"
-
-	if [[ ! -d .git ]]
-	then
-		echo "Warning: $repo is not a git repository, skipping…"
-		continue
-	fi
+	echo "$project"
 
 	tags=$(git tag)
 
@@ -65,4 +57,30 @@ do
 			git archive --prefix="$project-$version/" $tag | gzip > $tarball
 		fi
 	done
-done
+}
+
+if [[ -z "${1:-}" ]]
+then
+	topdir="$(git rev-parse --show-toplevel)"
+	project="$(basename "$topdir")"
+
+	archive-tags "$project"
+
+else
+	for repo in "$@"
+	do
+		project="$(basename "$repo")"
+		cd "$cwd"
+
+		cd "$repo"
+
+		if [[ ! -d .git ]]
+		then
+			echo "Warning: $repo is not a git repository, skipping…"
+			continue
+		fi
+
+		archive-tags "$project"
+
+	done
+fi

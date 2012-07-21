@@ -2,9 +2,9 @@
 git-upload-tarballs
 ###################
 
-***************************************
-Upload tarballs packaged by git-tarball
-***************************************
+*******************************************
+Upload tarballs packaged by ``git-tarball``
+*******************************************
 
 :Author: Martin Ueding <dev@martin-ueding.de>
 :Date: 2012-07-14

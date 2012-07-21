@@ -79,6 +79,5 @@ else
 		fi
 
 		archive-tags "$project"
-
 	done
 fi

@@ -33,6 +33,13 @@ check-readme() {
 	fi
 }
 
+check-changelog() {
+	if ! _check-for-glob "CHANGELOG*" && ! _check-for-glob "changelog*"
+	then
+		echo "no-changelog"
+	fi
+}
+
 check-scm() {
 	for dir in .git .bzr .svn .hg
 	do
@@ -71,10 +78,11 @@ check-makefile() {
 }
 
 check() {
+	check-changelog
+	check-makefile
 	check-readme
 	check-scm
 	check-tags
-	check-makefile
 }
 
 check

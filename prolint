@@ -17,6 +17,18 @@
 set -e
 set -u
 
+###############################################################################
+#                              helper functions                               #
+###############################################################################
+
+check() {
+	check-changelog
+	check-makefile
+	check-readme
+	check-scm
+	check-tags
+}
+
 _check-for-glob() {
 	if [[ -n "$(find . -maxdepth 1 -name "$1" -print -quit)" ]]
 	then
@@ -25,6 +37,10 @@ _check-for-glob() {
 		return 1
 	fi
 }
+
+###############################################################################
+#                                   checks                                    #
+###############################################################################
 
 check-readme() {
 	if ! _check-for-glob "README*" && ! _check-for-glob "readme*"
@@ -75,14 +91,6 @@ check-makefile() {
 	then
 		echo "no-make-install"
 	fi
-}
-
-check() {
-	check-changelog
-	check-makefile
-	check-readme
-	check-scm
-	check-tags
 }
 
 check

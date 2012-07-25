@@ -89,7 +89,7 @@ check-makefile() {
 
 	if ! grep -E '^clean:' [Mm]akefile > /dev/null
 	then
-		echo "no-make-install"
+		echo "no-make-clean"
 	fi
 }
 

@@ -6,3 +6,5 @@ all:
 install:
 	install -d "$(DESTDIR)/usr/bin/"
 	install prolint -t "$(DESTDIR)/usr/bin/"
+
+clean:

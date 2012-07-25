@@ -82,12 +82,12 @@ check-makefile() {
 		return 0
 	fi
 
-	if ! grep -E '^install:' [Mm]akefile
+	if ! grep -E '^install:' [Mm]akefile > /dev/null
 	then
 		echo "no-make-install"
 	fi
 
-	if ! grep -E '^clean:' [Mm]akefile
+	if ! grep -E '^clean:' [Mm]akefile > /dev/null
 	then
 		echo "no-make-install"
 	fi

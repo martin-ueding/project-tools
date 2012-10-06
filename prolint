@@ -27,6 +27,8 @@ check() {
 	check-readme
 	check-scm
 	check-tags
+	check-github
+	check-chaos
 }
 
 _check-for-glob() {
@@ -90,6 +92,26 @@ check-makefile() {
 	if ! grep -E '^clean:' [Mm]akefile > /dev/null
 	then
 		echo "no-make-clean"
+	fi
+}
+
+# Check whether this project is on GitHub.
+check-github() {
+	dir="$(pwd)"
+	name="${dir##*/}"
+	if ! wget "https://github.com/martin-ueding/$name" -O /dev/null &> /dev/null
+	then
+		echo "no-github"
+	fi
+}
+
+# Check whether this project is on chaos.
+check-chaos() {
+	dir="$(pwd)"
+	name="${dir##*/}"
+	if ! wget "http://chaos.stw-bonn.de/users/mu/git/$name.git" -O /dev/null &> /dev/null
+	then
+		echo "no-chaos"
 	fi
 }
 

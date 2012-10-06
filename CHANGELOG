@@ -4,6 +4,9 @@
 CHANGELOG
 #########
 
+v0.2
+    - Check for github and chaos as well.
+
 v0.1
     Initial release.
 

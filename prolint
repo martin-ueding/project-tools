@@ -29,6 +29,7 @@ check() {
 	check-tags
 	check-github
 	check-chaos
+	check-website
 }
 
 _check-for-glob() {
@@ -112,6 +113,16 @@ check-chaos() {
 	if ! wget "http://chaos.stw-bonn.de/users/mu/git/$name.git" -O /dev/null &> /dev/null
 	then
 		echo "no-chaos"
+	fi
+}
+
+# Check for a page on my personal homepage.
+check-website() {
+	dir="$(pwd)"
+	name="${dir##*/}"
+	if ! wget "http://martin-ueding.de/projects/$name/" -O /dev/null &> /dev/null
+	then
+		echo "no-website"
 	fi
 }
 

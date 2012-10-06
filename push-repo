@@ -27,7 +27,7 @@ do
 
 	cd "$repofolder"
 
-	ssh chaos create-bare "$repo"
+	ssh chaos /home/mu/bin/create-bare "$repo"
 
 	if git remote | grep "$server_alias"
 	then

@@ -31,7 +31,7 @@ archive-tags() {
 	if [[ -z "$tags" ]]
 	then
 		echo "Warning: $project has no tags, skipping…"
-		continue
+		exit 2
 	fi
 
 	for tag in $tags

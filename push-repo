@@ -9,33 +9,21 @@ set -u
 
 server_alias=chaos
 
-for repo in "$@"
-do
-	repofolder="$HOME/Branches/$repo"
+repo="$1"
 
-	if [[ ! -d "$repofolder" ]]
-	then
-		echo "Error: $repofolder does not exist. Skipping this repo."
-		continue
-	fi
+if ! git status
+then
+	exit 1
+fi
 
-	if [[ ! -d "$repofolder/.git" ]]
-	then
-		echo "Error: $repofolder is not a git repo. Skipping this repo."
-		continue
-	fi
+ssh chaos /home/mu/bin/create-bare "$repo"
 
-	cd "$repofolder"
+if git remote | grep "$server_alias"
+then
+	echo "Notice: $repo already had remote $server_alias."
+	git remote rm "$server_alias"
+fi
 
-	ssh chaos /home/mu/bin/create-bare "$repo"
+git remote add "$server_alias" "chaos:public_html/git/$repo.git"
 
-	if git remote | grep "$server_alias"
-	then
-		echo "Notice: $repo already had remote $server_alias."
-		git remote rm "$server_alias"
-	fi
-
-	git remote add "$server_alias" "chaos:public_html/git/$repo.git"
-
-	git push "$server_alias" --mirror
-done
+git push "$server_alias" --mirror

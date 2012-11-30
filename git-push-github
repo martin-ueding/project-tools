@@ -18,6 +18,6 @@ then
 	git remote rm "$server_alias"
 fi
 
-git remote add "$server_alias" "git@github.com:martin-ueding/$repo.git"
+git remote add "$server_alias" "git@github.com:$(git config github.user)/$repo.git"
 
 git push "$server_alias" --mirror

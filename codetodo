@@ -13,7 +13,7 @@ import subprocess
 
 import prettytable
 
-comments = [r"//", r"#", r"/\*", r"<!--"]
+comments = [r"//", r"#", r"/\*", r"<!--", r"%"]
 end_comments = [r"\*/", "-->"]
 
 keywords = ["TODO", "HACK", "FIXME", "XXX"]

@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (c) 2010, 2012 Martin Ueding <dev@martin-ueding.de>
+# Copyright (c) 2010, 2012-2013 Martin Ueding <dev@martin-ueding.de>
 
 """
 Goes through text based files and searches for C{TODO}, C{FIXME} and the like
@@ -7,11 +7,10 @@ comments. It strips the comment from it, categorizes them in the different tags
 and gives a table for each file with hits.
 """
 
+from prettytable import PrettyTable
 import os.path
 import re
 import subprocess
-
-import prettytable
 
 comments = [r"//", r"#", r"/\*", r"<!--", r"%"]
 end_comments = [r"\*/", "-->"]
@@ -61,7 +60,13 @@ def main():
                 print
 
             print filename
-            prettytable.print_table(None, tasks)
+
+            t = PrettyTable()
+            t.border = False
+            t.header = False
+            for task in tasks:
+                t.add_row(task)
+            print t
 
 if __name__ == "__main__":
     main()

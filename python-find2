@@ -33,7 +33,7 @@ def _parse_args():
     :return: Namespace with arguments.
     :rtype: Namespace
     """
-    parser = argparse.ArgumentParser(description="")
+    parser = argparse.ArgumentParser(description="Finds files that call “python2” or just “python”.")
     parser.add_argument("filenames", type=str, nargs="+", help="Positional arguments.")
     #parser.add_argument("", dest="", type="", default=, help=)
     #parser.add_argument("--version", action="version", version="<the version>")

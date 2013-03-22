@@ -11,15 +11,20 @@ def main():
     options = _parse_args()
 
     for filename in options.filenames:
-        with open(filename) as f:
-            line = next(f).strip()
+        try:
+            with open(filename) as f:
+                line = next(f).strip()
 
-            parts = line.split("/")
+                parts = line.split("/")
 
-            program = parts[-1]
+                program = parts[-1]
 
-            if any([program == x for x in ["python", "python2"]]):
-                print(filename)
+                if any([program == x for x in ["python", "python2"]]):
+                    print(filename)
+        except IOError:
+            pass
+        except UnicodeDecodeError:
+            pass
 
 def _parse_args():
     """

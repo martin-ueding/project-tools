@@ -4,6 +4,9 @@
 CHANGELOG
 #########
 
+v0.5
+    - Check for Debian packaging
+
 V0.4
     - Check for PPA
     - Check for COPYING file

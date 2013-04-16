@@ -22,14 +22,14 @@ set -u
 ###############################################################################
 
 check() {
-	check-ppa &
 	check-changelog &
+	check-chaos &
+	check-github &
 	check-makefile &
+	check-ppa &
 	check-readme &
 	check-scm &
 	check-tags &
-	check-github &
-	check-chaos &
 	check-website &
 	wait
 }
@@ -47,17 +47,70 @@ _check-for-glob() {
 #                                   checks                                    #
 ###############################################################################
 
-check-readme() {
-	if ! _check-for-glob "README*" && ! _check-for-glob "readme*"
-	then
-		echo "no-readme"
-	fi
-}
-
 check-changelog() {
 	if ! _check-for-glob "CHANGELOG*" && ! _check-for-glob "changelog*"
 	then
 		echo "no-changelog"
+	fi
+}
+
+# Check whether this project is on chaos.
+check-chaos() {
+	dir="$(pwd)"
+	name="${dir##*/}"
+	if ! wget "http://chaos.stw-bonn.de/users/mu/git/$name.git" -O /dev/null &> /dev/null
+	then
+		echo "no-chaos"
+	fi
+}
+
+# Check whether this project is on GitHub.
+check-github() {
+	dir="$(pwd)"
+	name="${dir##*/}"
+	if ! wget "https://github.com/martin-ueding/$name" -O /dev/null &> /dev/null
+	then
+		echo "no-github"
+	fi
+}
+
+check-makefile() {
+	if [[ ! -f makefile && ! -f Makefile ]]
+	then
+		echo "no-makefile"
+		return 0
+	fi
+
+	if ! grep -E '^install:' [Mm]akefile > /dev/null
+	then
+		echo "no-make-install"
+	fi
+
+	if ! grep -E '^clean:' [Mm]akefile > /dev/null
+	then
+		echo "no-make-clean"
+	fi
+}
+
+# Checks whether this project has a package in my Launchpad PPA.
+check-ppa() {
+	dir="$(pwd)"
+	name="${dir##*/}"
+	tempfile="$(mktemp)"
+	wget -O "$tempfile" "https://launchpad.net/~martin-ueding/+archive/stable/+packages"  &> /dev/null
+
+	if ! grep -F "$name" "$tempfile" &> /dev/null
+	then
+		echo "no-ppa"
+	fi
+
+	rm -f "$tempfile"
+}
+
+check-readme() {
+	if ! _check-for-glob "README*" && ! _check-for-glob "readme*"
+	then
+		echo "no-readme"
 	fi
 }
 
@@ -80,44 +133,6 @@ check-tags() {
 	fi
 }
 
-check-makefile() {
-	if [[ ! -f makefile && ! -f Makefile ]]
-	then
-		echo "no-makefile"
-		return 0
-	fi
-
-	if ! grep -E '^install:' [Mm]akefile > /dev/null
-	then
-		echo "no-make-install"
-	fi
-
-	if ! grep -E '^clean:' [Mm]akefile > /dev/null
-	then
-		echo "no-make-clean"
-	fi
-}
-
-# Check whether this project is on GitHub.
-check-github() {
-	dir="$(pwd)"
-	name="${dir##*/}"
-	if ! wget "https://github.com/martin-ueding/$name" -O /dev/null &> /dev/null
-	then
-		echo "no-github"
-	fi
-}
-
-# Check whether this project is on chaos.
-check-chaos() {
-	dir="$(pwd)"
-	name="${dir##*/}"
-	if ! wget "http://chaos.stw-bonn.de/users/mu/git/$name.git" -O /dev/null &> /dev/null
-	then
-		echo "no-chaos"
-	fi
-}
-
 # Check for a page on my personal homepage.
 check-website() {
 	dir="$(pwd)"
@@ -126,21 +141,6 @@ check-website() {
 	then
 		echo "no-website"
 	fi
-}
-
-# Checks whether this project has a package in my Launchpad PPA.
-check-ppa() {
-	dir="$(pwd)"
-	name="${dir##*/}"
-	tempfile="$(mktemp)"
-	wget -O "$tempfile" "https://launchpad.net/~martin-ueding/+archive/stable/+packages"  &> /dev/null
-
-	if ! grep -F "$name" "$tempfile" &> /dev/null
-	then
-		echo "no-ppa"
-	fi
-
-	rm -f "$tempfile"
 }
 
 check

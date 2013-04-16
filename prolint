@@ -23,14 +23,14 @@ set -u
 
 check() {
 	check-ppa &
-	check-changelog
-	check-makefile
-	check-readme
-	check-scm
-	check-tags
-	check-github
-	check-chaos
-	check-website
+	check-changelog &
+	check-makefile &
+	check-readme &
+	check-scm &
+	check-tags &
+	check-github &
+	check-chaos &
+	check-website &
 	wait
 }
 

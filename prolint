@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright © 2012 Martin Ueding <dev@martin-ueding.de>
+# Copyright © 2012-2013 Martin Ueding <dev@martin-ueding.de>
 
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -22,6 +22,7 @@ set -u
 ###############################################################################
 
 check() {
+	check-ppa &
 	check-changelog
 	check-makefile
 	check-readme
@@ -30,6 +31,7 @@ check() {
 	check-github
 	check-chaos
 	check-website
+	wait
 }
 
 _check-for-glob() {
@@ -124,6 +126,21 @@ check-website() {
 	then
 		echo "no-website"
 	fi
+}
+
+# Checks whether this project has a package in my Launchpad PPA.
+check-ppa() {
+	dir="$(pwd)"
+	name="${dir##*/}"
+	tempfile="$(mktemp)"
+	wget -O "$tempfile" "https://launchpad.net/~martin-ueding/+archive/stable/+packages"  &> /dev/null
+
+	if ! grep -F "$name" "$tempfile" &> /dev/null
+	then
+		echo "no-ppa"
+	fi
+
+	rm -f "$tempfile"
 }
 
 check

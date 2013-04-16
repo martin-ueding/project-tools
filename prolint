@@ -16,6 +16,7 @@ check() {
 	check-makefile &
 	check-ppa &
 	check-readme &
+	check-package &
 	check-scm &
 	check-tags &
 	check-website &
@@ -84,6 +85,20 @@ check-makefile() {
 	if ! grep -E '^clean:' [Mm]akefile > /dev/null
 	then
 		echo "no-make-clean"
+	fi
+}
+
+check-package() {
+	dir="$(pwd)"
+	name="${dir##*/}"
+	if ! cd "$HOME/Packaging/$name" &> /dev/null
+	then
+		echo "no-tar-archives"
+	fi
+
+	if [[ -z "$(find . -maxdepth 1 -type d -print -quit)" ]]
+	then
+		echo "no-package"
 	fi
 }
 

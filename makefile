@@ -7,3 +7,5 @@ install:
 	install create-bare -t "$(DESTDIR)/usr/bin/"
 	install git-push-chaos -t "$(DESTDIR)/usr/bin/"
 	install git-push-github -t "$(DESTDIR)/usr/bin/"
+
+clean:

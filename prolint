@@ -24,6 +24,7 @@ set -u
 check() {
 	check-changelog &
 	check-chaos &
+	check-copying &
 	check-github &
 	check-makefile &
 	check-ppa &
@@ -61,6 +62,13 @@ check-chaos() {
 	if ! wget "http://chaos.stw-bonn.de/users/mu/git/$name.git" -O /dev/null &> /dev/null
 	then
 		echo "no-chaos"
+	fi
+}
+
+check-copying() {
+	if ! _check-for-glob "COPYING*" && ! _check-for-glob "COPYING*"
+	then
+		echo "no-copying"
 	fi
 }
 

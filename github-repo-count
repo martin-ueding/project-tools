@@ -3,6 +3,10 @@
 
 # Copyright © 2013 Martin Ueding <dev@martin-ueding.de>
 
+"""
+Retrieves a list of GitHub repositories with the GitHub API and counts them.
+"""
+
 import argparse
 import urllib.request
 import json
@@ -34,7 +38,7 @@ def _parse_args():
     :return: Namespace with arguments.
     :rtype: Namespace
     """
-    parser = argparse.ArgumentParser(description="")
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("username", metavar="user", type=str, nargs="?", default="martin-ueding", help="Username")
     #parser.add_argument("", dest="", type="", default=, help=)
     #parser.add_argument("--version", action="version", version="<the version>")

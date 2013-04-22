@@ -3,6 +3,10 @@
 Changelog
 =========
 
+v1.3
+    - Changelog in the repo itself
+    - Script for both, ``git-push-default``
+
 v1.2.1
     - Add GPLv2+ copying file
 

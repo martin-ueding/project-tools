@@ -4,6 +4,11 @@
 CHANGELOG
 #########
 
+v0.6
+    - Check for untagged commits
+    - Add a report generating script
+    - Add README
+
 v0.5
     - Check for Debian packaging
 

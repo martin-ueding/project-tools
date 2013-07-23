@@ -145,7 +145,7 @@ check-tags() {
 }
 
 check-untagged-commits() {
-	if ! git log --oneline --decorate master | head -n 1 | grep 'tag: '
+	if ! git log --oneline --decorate master | head -n 1 | grep 'tag: ' &> /dev/null
 	then
 		echo 'untagged-commits'
 	fi

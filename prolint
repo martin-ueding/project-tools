@@ -14,11 +14,12 @@ check() {
 	check-copying &
 	check-github &
 	check-makefile &
+	check-package &
 	check-ppa &
 	check-readme &
-	check-package &
 	check-scm &
 	check-tags &
+	check-untagged-commits &
 	check-website &
 	wait
 }
@@ -140,6 +141,13 @@ check-tags() {
 	if [[ -d .git && -z "$(git tag)" ]]
 	then
 		echo "no-tags"
+	fi
+}
+
+check-untagged-commits() {
+	if ! git log --oneline --decorate master | head -n 1 | grep 'tag: '
+	then
+		echo 'untagged-commits'
 	fi
 }
 

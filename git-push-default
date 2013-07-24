@@ -6,3 +6,4 @@ set -u
 
 git-push-github "$@"
 git-push-chaos "$@"
+git-push-bitbucket "$@"

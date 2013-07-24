@@ -3,6 +3,9 @@
 Changelog
 =========
 
+v1.4.2
+    - Supress output
+
 v1.4.1
     - Actually install script
 

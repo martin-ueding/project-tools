@@ -3,6 +3,9 @@
 Changelog
 =========
 
+v1.4.1
+    - Actually install script
+
 v1.4
     - Add script for Bitbucket.org
 

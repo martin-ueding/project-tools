@@ -3,6 +3,9 @@
 Changelog
 =========
 
+v1.4
+    - Add script for Bitbucket.org
+
 v1.3
     - Changelog in the repo itself
     - Script for both, ``git-push-default``

@@ -9,7 +9,7 @@ repo="$1"
 
 . ~/.config/chaos-repos/bitbucket.sh
 
-curl https://bitbucket.org/api/1.0/repositories -u "$user:$password" --data "name=$repo"
+curl https://bitbucket.org/api/1.0/repositories -u "$user:$password" --data "name=$repo" > /dev/null
 
 if git remote | grep "$server_alias"
 then

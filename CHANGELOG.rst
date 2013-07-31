@@ -4,6 +4,9 @@
 CHANGELOG
 #########
 
+v0.6.1
+    - Check for more make targets
+
 v0.6
     - Check for untagged commits
     - Add a report generating script

@@ -78,15 +78,13 @@ check-makefile() {
 		return 0
 	fi
 
-	if ! grep -E '^install:' [Mm]akefile > /dev/null
-	then
-		echo "no-make-install"
-	fi
-
-	if ! grep -E '^clean:' [Mm]akefile > /dev/null
-	then
-		echo "no-make-clean"
-	fi
+    for target in clean distclean install html
+    do
+        if ! grep -E "^$target:" [Mm]akefile > /dev/null
+        then
+            echo "no-make-$target"
+        fi
+    done
 }
 
 check-package() {

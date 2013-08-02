@@ -3,6 +3,9 @@
 Changelog
 =========
 
+v1.5
+    - Rename scripts to ``git-init-*``
+
 v1.4.2
     - Supress output
 

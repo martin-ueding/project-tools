@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v0.6.2
+    - Actually install report script
+
 v0.6.1
     - Check for more make targets
 

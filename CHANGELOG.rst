@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v0.6.3
+    - Use new environment variables for folders
+
 v0.6.2
     - Actually install report script
 

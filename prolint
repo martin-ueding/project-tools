@@ -90,14 +90,17 @@ check-makefile() {
 check-package() {
 	dir="$(pwd)"
 	name="${dir##*/}"
-	if ! cd "$HOME/Packaging/$name" &> /dev/null
+	if ! cd "$TAR_ARCHIVE_DIR/$name" &> /dev/null
 	then
 		echo "no-tar-archives"
 	fi
 
-	if [[ -z "$(find . -maxdepth 1 -type d -print -quit)" ]]
+	if cd "$DEBIAN_PACKAGING_DIR/$name" &> /dev/null
 	then
-		echo "no-package"
+		if [[ -z "$(find . -maxdepth 1 -type d -print -quit)" ]]
+		then
+			echo "no-package"
+		fi
 	fi
 }
 

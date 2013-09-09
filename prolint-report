@@ -4,7 +4,7 @@
 set -e
 set -u
 
-cd "$HOME/Branches"
+cd "$PROJECTS_DIR"
 
 outfile="$HOME/TODO/prolint-report.txt"
 

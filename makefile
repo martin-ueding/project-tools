@@ -2,13 +2,6 @@
 
 all: git-tarball.1.gz git-upload-tarballs.1.gz
 
-%.1.gz: %.1
-	$(RM) $@
-	gzip $<
-
-%.1: %.1.rst
-	rst2man $< $@
-
 .PHONY: clean
 clean:
 	$(RM) *.1
@@ -31,3 +24,10 @@ install:
 	install -d "$(DESTDIR)/usr/bin/"
 	install prolint -t "$(DESTDIR)/usr/bin/"
 	install prolint-report -t "$(DESTDIR)/usr/bin/"
+
+%.1.gz: %.1
+	$(RM) $@
+	gzip $<
+
+%.1: %.1.rst
+	rst2man $< $@

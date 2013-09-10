@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.0
+    Initial release
+
 Old Changelog for ``chaos-repos``
 =================================
 

@@ -160,7 +160,7 @@ class Package(object):
 
     def export_latest(self):
         '''
-        Goes into the ``~/Branches`` folder and generates a tar archive with the
+        Goes into the ``~/Projekte`` folder and generates a tar archive with the
         latest version.
 
         Changes the current working directory.

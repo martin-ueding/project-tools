@@ -13,7 +13,7 @@ import subprocess
 __docformat__ = "restructuredtext en"
 
 def find_repos():
-    start_folders = ["Branches", "Dokumente/Studium", ".vim"]
+    start_folders = ["Projekte", "Dokumente/Studium", ".vim"]
 
     repos = []
 

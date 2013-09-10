@@ -1,0 +1,383 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+# Copyright © 2012-2013 Martin Ueding <dev@martin-ueding.de>
+
+'''
+Goes through the folder with my projects, exports the current git tags with
+``git tarball`` into the packaging folder. Then it uses ``uupdate`` and
+``debuild``, as well as ``dput`` to make sure that all packages in the
+Launchpad PPA are up do date.
+'''
+
+import argparse
+import functools
+import glob
+import json
+import os
+import platform
+import re
+import subprocess
+
+import colorcodes
+
+__docformat__ = 'restructuredtext en'
+
+_c = colorcodes.Colorcodes()
+
+current_release = platform.dist()[2]
+'''
+Ubuntu release that the packages should be on.
+'''
+
+packages = sorted(os.listdir(os.path.expanduser('~/Packaging_Debian')))
+
+public = []
+'''
+List of packages that should be uploaded.
+'''
+
+upgrades = []
+
+def check_for_debian():
+    dist = platform.dist()
+
+    if not dist[0] in ["Debian", "Ubuntu"]:
+        print(_c.red + "This is not a Debian or Ubuntu machine" + _c.reset)
+        sys.exit(15)
+
+def p(command):
+    '''
+    Prints the given command.
+    '''
+    print('$ {}'.format(' '.join(command)))
+
+
+basedir = os.path.expanduser('~/Packaging_Debian')
+branchesdir = os.path.expanduser('~/Projekte')
+
+class PackagingError(Exception):
+    '''
+    General exception class for this script.
+    '''
+    pass
+
+
+class Package(object):
+    '''
+    Models a Debian Package.
+    '''
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return "Package('{}')".format(self.name)
+
+    def auto(self):
+        print()
+        print(_c.cyan + self.name + _c.reset)
+        print(_c.cyan + '-'*len(self.name) + _c.reset)
+        print()
+
+        os.chdir(basedir)
+
+        self.export_latest()
+        if self.needs_uupdate():
+            self.uupdate()
+
+        if self.name in public:
+            if self.needs_building(True) or self.needs_new_series():
+                self.build(True)
+            try:
+                self.upload()
+            except PackagingError as e:
+                print('Caught error, trying to build source again.')
+                self.build(True)
+                self.upload()
+
+        build_now = False
+
+        if self.needs_building(False):
+            self.build(False)
+            build_now = True
+
+        needs_upgrade, installed, latest = self.needs_upgrade()
+        if needs_upgrade:
+            print(_c.orange + 'This package needs upgrading, {} → {}'.format(installed, latest) + _c.reset)
+            if not build_now:
+                self.clean()
+                self.build(False)
+            upgrades.append(
+                os.path.join(basedir, self.name, self.get_latest('.deb'))
+            )
+
+    def build(self, source=True):
+        '''
+        Builds the given package, binary or source.
+        '''
+        latest_folder = self.get_latest_folder()
+
+        os.chdir(os.path.join(basedir, self.name, latest_folder, 'debian'))
+        sed_command = ['sed', '-i', 's/UNRELEASED/{}/'.format(current_release), 'changelog']
+        subprocess.check_call(sed_command)
+
+        if source:
+            self.bump_release()
+
+        os.chdir(os.path.join(basedir, self.name, self.get_latest_folder()))
+
+        command = ['debuild']
+
+        if source:
+            command.append('-S')
+
+        try:
+            subprocess.check_call(command)
+        except subprocess.CalledProcessError as e:
+            print(e)
+            raise PackagingError('Build failed.')
+
+    def bump_release(self):
+        if self.needs_new_series():
+            latest_folder = self.get_latest_folder()
+            os.chdir(os.path.join(basedir, self.name, latest_folder, 'debian'))
+            print(_c.orange + 'This needs to be uploaded with the new release.' + _c.reset)
+            subprocess.check_call(['pwd'])
+            subprocess.check_call(['dch', '-D', current_release, 'Rebuild for {}'.format(current_release)])
+
+    def clean(self):
+        '''
+        Remove everything that can be build.
+        '''
+        suffixes = [
+            '.deb',
+        ]
+
+        for suffix in suffixes:
+            files = glob.glob('*{}'.format(suffix))
+            for file_ in files:
+                print(_c.green + 'Cleaning {}'.format(file_) + _c.reset)
+                os.unlink(file_)
+
+    def export_latest(self):
+        '''
+        Goes into the ``~/Branches`` folder and generates a tar archive with the
+        latest version.
+
+        Changes the current working directory.
+        '''
+        for d in [branchesdir, os.path.expanduser('~/.vim/bundle')]:
+            try:
+                os.chdir(os.path.join(branchesdir, self.name))
+                subprocess.check_call(['git', 'tarball', basedir])
+            except subprocess.CalledProcessError:
+                pass
+            except OSError:
+                pass
+
+    def get_latest(self, suffix, function=None, folder=False):
+        os.chdir(os.path.join(basedir, self.name))
+        output = subprocess.check_output('ls | sort -V', shell=True)
+        lines = output.decode().strip().split('\n')
+        files = [x for x in lines
+                 if (
+                     (not folder and os.path.isfile(os.path.join(basedir, self.name, x)))
+                     or (folder and os.path.isdir(os.path.join(basedir, self.name, x)))
+                 )
+                 and x.endswith(suffix)]
+
+        if function is not None:
+            files = [x for x in files if function(x)]
+
+        if len(files) == 0:
+            raise PackagingError('No latest *{} found'.format(suffix))
+
+        return files[-1]
+
+    def get_latest_folder(self):
+        '''
+        Retrieves the folder (without ``.orig``) which has the latest version
+        number. If there is no such folder, ``None`` is returned.
+        '''
+        def function(x):
+            return not x.endswith('.orig')
+
+        return self.get_latest('', function, folder=True)
+
+    def get_latest_tar(self):
+        def function(x):
+            return not x.endswith('.orig.tar.gz') and not x.endswith('.debian.tar.gz')
+
+        return self.get_latest('.tar.gz', function)
+
+    def get_release(self):
+        '''
+        Checks the changelog for the Ubuntu series this package is on.
+        '''
+        changelog_file = os.path.join(self.get_latest_folder(), 'debian', 'changelog')
+
+        with open(changelog_file) as f:
+            first_line = f.readline()
+
+        m = re.match(r'.*? \(.*?\) (\w+); urgency=\w+', first_line)
+
+        if m:
+            return m.group(1)
+
+    def installed_version(self):
+        '''
+        Checks ``apt-cache`` for the installed version of the package.
+
+        I am aware that there is an ``apt`` module for Python which does the
+        very thing. But feel lazy and just get it out of the output and parse
+        that.
+        '''
+        try:
+            command = ['apt-cache', 'show', self.name]
+            output = subprocess.check_output(command)
+        except subprocess.CalledProcessError as e:
+            print(e)
+        else:
+            lines = output.decode().strip().split('\n')
+            for line in lines:
+                if line.startswith('Version:'):
+                    words = line.strip().split()
+
+                    return words[1]
+
+    def needs_building(self, source=True):
+        '''
+        Checks whether the package needs to be build.
+
+        It checks the latest ``.changes`` and ``.deb`` in the folder and
+        compares them to the latest folder.
+        '''
+        os.chdir(os.path.join(basedir, self.name))
+
+        latest_folder = self.get_latest_folder()
+        try:
+            if source:
+                latest = self.get_latest('_source.changes')
+            else:
+                latest = self.get_latest('.deb')
+        except PackagingError:
+            return True
+
+        prefix = latest[:len(latest_folder)]
+        prefix = prefix[:len(self.name)] + '-' + prefix[len(self.name) + 1:]
+
+        return latest_folder != prefix
+
+    def needs_new_series(self):
+        release = self.get_release()
+        return_value = release != current_release
+        print("Found and current:", release, current_release, return_value)
+        return return_value
+
+    def needs_upgrade(self):
+        '''
+        Checks whether the package needs to be updated.
+        '''
+        installed = self.installed_version()
+        latest_deb = self.get_latest('.deb')
+        pattern = r'{}_([^_]+)_.+\.deb'.format(self.name)
+        m = re.match(pattern, latest_deb)
+        if m:
+            latest_version = m.group(1)
+
+        return latest_version != installed, installed, latest_version
+
+    def needs_uupdate(self):
+        os.chdir(os.path.join(basedir, self.name))
+
+        latest_folder = self.get_latest_folder()
+        latest_tar = self.get_latest_tar()
+
+        prefix = latest_tar[:-len('.tar.gz')]
+        prefix = prefix[:len(self.name)] + '-' + prefix[len(self.name) + 1:]
+
+        return latest_folder != prefix
+
+    def upload(self):
+        changes = self.get_latest('_source.changes')
+        try:
+            os.chdir(os.path.join(basedir, self.name))
+            subprocess.check_call(['dput', 'stable', changes])
+        except subprocess.CalledProcessError as e:
+            print(e)
+            raise PackagingError('Upload failed')
+
+    def uupdate(self):
+        '''
+        Goes into the latest folder and calls ``uupdate`` onto the latest tar
+        archive.
+
+        After that, there should be a new latest folder.
+        '''
+        latest_tar = self.get_latest_tar()
+        latest_folder = self.get_latest_folder()
+
+        os.chdir(os.path.join(basedir, self.name, latest_folder))
+
+        try:
+            command = ['uupdate', '../'+latest_tar]
+            subprocess.check_call(command)
+        except subprocess.CalledProcessError as e:
+            print(e)
+            raise PackagingError('uupdate failed')
+
+
+def main():
+    options = _parse_args()
+
+    check_for_debian()
+
+    if options.dry_run:
+        subprocess.check_call = p
+
+    publicfile = os.path.expanduser('~/.config/maintenance/public.js')
+
+    if os.path.isfile(publicfile):
+        with open(publicfile) as f:
+            global public
+            public = json.load(f)
+
+    for name in packages:
+        try:
+            package = Package(name)
+            package.auto()
+        except OSError as e:
+            print(_c.red + str(e) + _c.reset)
+            print(_c.red + 'Packaging of {0} failed.'.format(package) + _c.reset)
+        except PackagingError as e:
+            print(_c.red + str(e) + _c.reset)
+            print(_c.red + 'Packaging of {0} failed.'.format(package) + _c.reset)
+
+    if len(upgrades) > 0:
+        print()
+        print('possible upgrades')
+        print('-----------------')
+        print()
+        command = ["pkexec", "dpkg", "-i"] + upgrades
+        print(" ".join(command))
+        print()
+        subprocess.call(command)
+
+
+def _parse_args():
+    '''
+    Parses the command line arguments.
+
+    :return: Namespace with arguments.
+    :rtype: Namespace
+    '''
+    parser = argparse.ArgumentParser(description=__doc__)
+    #parser.add_argument('args', metavar='N', type=str, nargs='*', help='Positional arguments.')
+    #parser.add_argument('', dest='', type='', default=, help=)
+    parser.add_argument('-n', dest='dry_run', action='store_true', default=False, help='dry run')
+    #parser.add_argument('--version', action='version', version='<the version>')
+
+    return parser.parse_args()
+
+if __name__ == '__main__':
+    main()

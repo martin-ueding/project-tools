@@ -1,0 +1,62 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+# Copyright © 2013 Martin Ueding <dev@martin-ueding.de>
+
+import argparse
+import re
+import colorcodes
+import os
+import json
+import subprocess
+
+__docformat__ = "restructuredtext en"
+
+def find_repos():
+    start_folders = ["Branches", "Dokumente/Studium", ".vim"]
+
+    repos = []
+
+    for start in start_folders:
+        for dirpath, dirnames, filenames in os.walk(os.path.expanduser(os.path.join("~", start))):
+            if ".git" in dirnames:
+                dirnames = []
+                repos.append(os.path.join(dirpath))
+                print(repos[-1])
+
+    return repos
+
+def main():
+    options = _parse_args()
+
+    repos = find_repos()
+
+    repos.sort()
+
+    outfile = os.path.expanduser("~/.cache/maintenance/git-repos.js")
+
+    dirname = os.path.dirname(outfile)
+    try:
+        os.makedirs(dirname)
+    except FileExistsError:
+        pass
+
+    with open(outfile, "w") as f:
+        f.write(json.dumps(repos))
+
+def _parse_args():
+    """
+    Parses the command line arguments.
+
+    :return: Namespace with arguments.
+    :rtype: Namespace
+    """
+    parser = argparse.ArgumentParser(description="")
+    #parser.add_argument("args", metavar="N", type=str, nargs="*", help="Positional arguments.")
+    #parser.add_argument("", dest="", type="", default=, help=)
+    #parser.add_argument("--version", action="version", version="<the version>")
+
+    return parser.parse_args()
+
+if __name__ == "__main__":
+    main()

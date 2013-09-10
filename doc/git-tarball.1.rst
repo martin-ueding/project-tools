@@ -1,15 +1,15 @@
 .. Copyright © 2012-2013 Martin Ueding <dev@martin-ueding.de>
 
-###########
-git-tarball
-###########
+###############
+git-release-tar
+###############
 
-******************************
-Generate tarball from git tags
-******************************
+**********************************
+Generate release tar from git tags
+**********************************
 
 :Author: Martin Ueding <dev@martin-ueding.de>
-:Date: 2012-07-15
+:Date: 2013-09-10
 :Manual section: 1
 
 
@@ -18,7 +18,7 @@ SYNOPSIS
 
 ::
 
-    git tarball [repo1 ...]
+    git release-tar [-d destination] [repo1 ...]
 
 DESCRIPTION
 ===========
@@ -40,24 +40,17 @@ OPTIONS
 
 You can supply a list of folders which are git repositories. If you do not supply any, the current repo will be used, with its directory name as the project name.
 
+``-d destination``
+    Create the tar archive in the given location.
+
 ENVIRONMENT
 ===========
 
 It will use these keys from the ``.gitconfig``:
 
 - tarball.destdir
-- tarball.ftp
-
-It will use the ``.netrc`` file to determine username and password for the
-given FTP server.
 
 FILES
 =====
 
 - ``.gitconfig``
-- ``.netrc``
-
-SEE ALSO
-========
-
-git-upload-tarballs(1)

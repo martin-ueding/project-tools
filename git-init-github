@@ -1,0 +1,23 @@
+#!/bin/bash
+# Copyright © 2012 Martin Ueding <dev@martin-ueding.de>
+
+# Creates a new repository on github, adds the remote and pushes.
+
+set -e
+set -u
+
+server_alias=github
+
+repo="$1"
+
+curl -u "$(git config github.user):$(git config github.password)" https://api.github.com/user/repos -d "{\"name\":\"${repo}\"}"
+
+if git remote | grep "$server_alias"
+then
+	echo "Notice: $repo already had remote $server_alias."
+	git remote rm "$server_alias"
+fi
+
+git remote add "$server_alias" "git@github.com:$(git config github.user)/$repo.git"
+
+git push "$server_alias" --mirror

@@ -1,0 +1,22 @@
+#!/bin/bash
+# Copyright © 2013 Martin Ueding <dev@martin-ueding.de>
+
+set -e
+set -u
+
+server_alias=bitbucket
+repo="$1"
+
+. ~/.config/chaos-repos/bitbucket.sh
+
+curl https://bitbucket.org/api/1.0/repositories -u "$user:$password" --data "name=$repo" > /dev/null
+
+if git remote | grep "$server_alias"
+then
+	echo "Notice: $repo already had remote $server_alias."
+	git remote rm "$server_alias"
+fi
+
+git remote add "$server_alias" "git@bitbucket.org:$user/$repo"
+
+git push "$server_alias" --mirror

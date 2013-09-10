@@ -24,6 +24,9 @@ install:
 	install -d "$(DESTDIR)/usr/bin/"
 	install prolint -t "$(DESTDIR)/usr/bin/"
 	install prolint-report -t "$(DESTDIR)/usr/bin/"
+#
+	install -d "$(DESTDIR)/usr/bin/"
+	install python-find2 -t "$(DESTDIR)/usr/bin/"
 
 %.1.gz: %.1
 	$(RM) $@

@@ -10,7 +10,9 @@ server_alias=github
 
 repo="$1"
 
-curl -u "$(git config github.user):$(git config github.password)" https://api.github.com/user/repos -d "{\"name\":\"${repo}\"}"
+. ~/.config/project-tools/git-init-github.sh
+
+curl -u "$user:$password" https://api.github.com/user/repos -d "{\"name\":\"${repo}\"}"
 
 if git remote | grep "$server_alias"
 then

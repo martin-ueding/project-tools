@@ -5,7 +5,7 @@
 
 '''
 Goes through the folder with my projects, exports the current git tags with
-``git tarball`` into the packaging folder. Then it uses ``uupdate`` and
+``git release-tar`` into the packaging folder. Then it uses ``uupdate`` and
 ``debuild``, as well as ``dput`` to make sure that all packages in the
 Launchpad PPA are up do date.
 '''
@@ -30,7 +30,9 @@ current_release = platform.dist()[2]
 Ubuntu release that the packages should be on.
 '''
 
-packages = sorted(os.listdir(os.path.expanduser('~/Packaging_Debian')))
+basedir = os.path.expanduser('~/debuild')
+branchesdir = os.path.expanduser('~/Projekte')
+packages = sorted(os.listdir(basedir))
 
 public = []
 '''
@@ -52,9 +54,6 @@ def p(command):
     '''
     print('$ {}'.format(' '.join(command)))
 
-
-basedir = os.path.expanduser('~/Packaging_Debian')
-branchesdir = os.path.expanduser('~/Projekte')
 
 class PackagingError(Exception):
     '''
@@ -169,7 +168,7 @@ class Package(object):
         for d in [branchesdir, os.path.expanduser('~/.vim/bundle')]:
             try:
                 os.chdir(os.path.join(branchesdir, self.name))
-                subprocess.check_call(['git', 'tarball', basedir])
+                subprocess.check_call(['git', 'release-tar', '-d', basedir])
             except subprocess.CalledProcessError:
                 pass
             except OSError:

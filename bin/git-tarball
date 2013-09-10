@@ -4,10 +4,17 @@
 set -e
 set -u
 
+while getopts "d:" opt
+do
+	case "$opt" in
+		d)
+			destination="$OPTARG"
+			;;
+	esac
+done
+shift $((OPTIND-1))
+
 version_regex="v(.+)"
-
-destination="$(git config --get tarball.destdir)"
-
 cwd="$(pwd)"
 
 archive-tags() {

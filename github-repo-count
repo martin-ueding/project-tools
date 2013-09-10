@@ -1,0 +1,50 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+# Copyright © 2013 Martin Ueding <dev@martin-ueding.de>
+
+"""
+Retrieves a list of GitHub repositories with the GitHub API and counts them.
+"""
+
+import argparse
+import urllib.request
+import json
+
+__docformat__ = "restructuredtext en"
+
+def main():
+    options = _parse_args()
+
+    filename, header = urllib.request.urlretrieve("https://api.github.com/users/{}/repos".format(options.username))
+    with open(filename) as fp:
+        repos = json.load(fp)
+
+    names = [repo["name"] for repo in repos]
+
+    names.sort()
+
+    for name in names:
+        print(name)
+
+    print()
+    print("Total: ", len(repos))
+
+
+def _parse_args():
+    """
+    Parses the command line arguments.
+
+    :return: Namespace with arguments.
+    :rtype: Namespace
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("username", metavar="user", type=str, nargs="?", default="martin-ueding", help="Username")
+    #parser.add_argument("", dest="", type="", default=, help=)
+    #parser.add_argument("--version", action="version", version="<the version>")
+
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    main()

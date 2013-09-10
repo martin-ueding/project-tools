@@ -27,6 +27,9 @@ install:
 #
 	install -d "$(DESTDIR)/usr/bin/"
 	install python-find2 -t "$(DESTDIR)/usr/bin/"
+#
+	install -d "$(DESTDIR)/usr/bin/"
+	install code-todo -t "$(DESTDIR)/usr/bin/"
 
 %.1.gz: %.1
 	$(RM) $@

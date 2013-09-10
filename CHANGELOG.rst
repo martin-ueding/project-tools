@@ -4,6 +4,10 @@
 Changelog
 #########
 
+v1.1
+    *git-release-tar*: Add ``-d`` option
+    *ppa*: Update paths
+
 v1.0
     Initial release
 

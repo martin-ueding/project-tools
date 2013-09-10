@@ -1,28 +1,30 @@
 # Copyright © 2012-2013 Martin Ueding <dev@martin-ueding.de>
 
-all: git-tarball.1.gz git-upload-tarballs.1.gz
+SHELL = /bin/bash
+
+rst_files = $(wildcard doc/*.?.rst)
+man_pages = $(rst_files:.rst=.gz)
+
+all: $(man_pages)
 
 .PHONY: clean
 clean:
-	$(RM) *.1
-	$(RM) *.1.gz
+	$(RM) doc/*.1
+	$(RM) doc/*.1.gz
 
 install:
 	install -d "$(DESTDIR)/usr/bin/"
-	install create-bare -t "$(DESTDIR)/usr/bin/"
-	install git-init-bitbucket -t "$(DESTDIR)/usr/bin/"
-	install git-init-chaos -t "$(DESTDIR)/usr/bin/"
-	install git-init-default -t "$(DESTDIR)/usr/bin/"
-	install git-init-github -t "$(DESTDIR)/usr/bin/"
-	install git-tarball -t "$(DESTDIR)/usr/bin/"
-	install git-upload-tarballs -t "$(DESTDIR)/usr/bin/"
-	install prolint -t "$(DESTDIR)/usr/bin/"
-	install prolint-report -t "$(DESTDIR)/usr/bin/"
-	install python-find2 -t "$(DESTDIR)/usr/bin/"
-	install code-todo -t "$(DESTDIR)/usr/bin/"
+	for script in bin/*; \
+		do \
+		install "$$script" -t "$(DESTDIR)/usr/bin/"; \
+		done
 #
-	if [ -f git-tarball.1.gz ]; then install -d "$(DESTDIR)/usr/share/man/man1/"; install -m 644 git-tarball.1.gz -t "$(DESTDIR)/usr/share/man/man1/"; fi
-	if [ -f git-upload-tarballs.1.gz ]; then install -d "$(DESTDIR)/usr/share/man/man1/"; install -m 644 git-upload-tarballs.1.gz -t "$(DESTDIR)/usr/share/man/man1/"; fi
+	install -d "$(DESTDIR)/usr/bin/"
+	for manpage in doc/*.gz; \
+		do \
+		install -d "$(DESTDIR)/usr/share/man/man1/"; \
+		install "$$manpage" -m 644 -t "$(DESTDIR)/usr/share/man/man1/"; \
+		done
 
 %.1.gz: %.1
 	$(RM) $@

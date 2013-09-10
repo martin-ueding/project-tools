@@ -1,0 +1,20 @@
+#!/bin/bash
+# Copyright (c) 2011 Martin Ueding <dev@martin-ueding.de>
+
+set -e
+set -u
+
+for arg
+do
+	if [[ ! -d "$arg/.git" ]]
+	then
+		continue
+	fi
+
+	tag_count="$(cd "$arg" && git tag | wc -l)"
+
+	if (( tag_count == 0 ))
+	then
+		echo "$arg"
+	fi
+done

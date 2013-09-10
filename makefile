@@ -27,3 +27,7 @@ install:
 	install -d "$(DESTDIR)/usr/bin/"
 	install git-tarball -t "$(DESTDIR)/usr/bin/"
 	install git-upload-tarballs -t "$(DESTDIR)/usr/bin/"
+#
+	install -d "$(DESTDIR)/usr/bin/"
+	install prolint -t "$(DESTDIR)/usr/bin/"
+	install prolint-report -t "$(DESTDIR)/usr/bin/"

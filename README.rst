@@ -1,4 +1,4 @@
-.. Copyright © 2012 Martin Ueding <dev@martin-ueding.de>
+.. Copyright © 2012-2013 Martin Ueding <dev@martin-ueding.de>
 
 ###########
 git-tarball
@@ -20,3 +20,10 @@ website
 =======
 
 Check out http://martin-ueding.de/projects/git-tarball.
+
+#######
+Prolint
+#######
+
+Checks projects for common errors, like a missing readme. It prints a list of
+tags that were found, kind of like lintian for Debian packages.

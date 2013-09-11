@@ -9,6 +9,7 @@ import json
 import os
 import re
 import glob
+import shutil
 import subprocess
 
 __docformat__ = "restructuredtext en"
@@ -61,7 +62,7 @@ def migrate_to_mirror(repo, remote):
 
     for file_ in glob.glob(".git/refs/remotes/{}/*".format(remote)):
         print("Deleting mirror ref:", file_)
-        os.unlink(file_)
+        shutil.rmtree(file_)
 
 def save_last_commits():
     global last_commits
@@ -75,14 +76,15 @@ def find_remotes(repo):
     remotes = [x for x in output.split("\n") if len(x) > 0]
     return remotes
 
-def handle_repo(repo):
+def handle_repo(repo, options):
     remotes = find_remotes(repo)
 
 	# If there are no remotes in this repo, there is nothing more to do.
     if len(remotes) == 0:
         return
 
-    fetch(repo, remotes)
+    if not options.nofetch:
+        fetch(repo, remotes)
     init(repo, remotes)
     push(repo, remotes)
 
@@ -190,7 +192,7 @@ def main():
     repos.sort()
 
     for repo in repos:
-        handle_repo(repo)
+        handle_repo(repo, options)
 
     print_stats()
 
@@ -203,7 +205,7 @@ def _parse_args():
     """
     parser = argparse.ArgumentParser(description="")
     #parser.add_argument("args", metavar="N", type=str, nargs="*", help="Positional arguments.")
-    #parser.add_argument("", dest="", type="", default=, help=)
+    parser.add_argument("--nofetch", action="store_true")
     #parser.add_argument("--version", action="version", version="<the version>")
 
     return parser.parse_args()

@@ -205,7 +205,7 @@ def _parse_args():
     """
     parser = argparse.ArgumentParser(description="")
     #parser.add_argument("args", metavar="N", type=str, nargs="*", help="Positional arguments.")
-    parser.add_argument("--nofetch", action="store_true")
+    parser.add_argument("--nofetch", action="store_true", help="Skip “git fetch”")
     #parser.add_argument("--version", action="version", version="<the version>")
 
     return parser.parse_args()

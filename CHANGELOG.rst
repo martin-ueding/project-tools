@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.2
+    - **Added**: ``git-spull``
+
 v1.1.1
     - Update folders
 

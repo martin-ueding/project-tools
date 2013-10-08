@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.2.1
+    - *ppa*: Disable installation
+
 v1.2
     - **Added**: ``git-spull``
 

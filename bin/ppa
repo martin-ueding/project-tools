@@ -101,7 +101,7 @@ class Package(object):
             build_now = True
 
         needs_upgrade, installed, latest = self.needs_upgrade()
-        if needs_upgrade:
+        if needs_upgrade and False:
             print(_c.orange + 'This package needs upgrading, {} → {}'.format(installed, latest) + _c.reset)
             if not build_now:
                 self.clean()

@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.3
+    - *ppa*: Add ``-u`` switch to upgrade packages locally
+
 v1.2.2
     - *git-autpush*: Make it more robust
 

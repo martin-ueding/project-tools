@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.2.2
+    - *git-autpush*: Make it more robust
+
 v1.2.1
     - *ppa*: Disable installation
 

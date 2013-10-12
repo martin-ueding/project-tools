@@ -4,6 +4,10 @@
 Changelog
 #########
 
+v1.4
+    - *ppa*: Only build when installing packages. This is unneeded work
+      otherwise.
+
 v1.3
     - *ppa*: Add ``-u`` switch to upgrade packages locally
 

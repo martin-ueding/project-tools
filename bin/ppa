@@ -94,21 +94,22 @@ class Package(object):
                 self.build(True)
                 self.upload()
 
-        built_now = False
+        if options.upgrade:
+            built_now = False
 
-        if self.needs_building(False):
-            self.build(False)
-            built_now = True
-
-        needs_upgrade, installed, latest = self.needs_upgrade()
-        if needs_upgrade and options.upgrade:
-            print(_c.orange + 'This package needs upgrading, {} → {}'.format(installed, latest) + _c.reset)
-            if not built_now:
-                self.clean()
+            if self.needs_building(False):
                 self.build(False)
-            upgrades.append(
-                os.path.join(basedir, self.name, self.get_latest('.deb'))
-            )
+                built_now = True
+
+            needs_upgrade, installed, latest = self.needs_upgrade()
+            if needs_upgrade:
+                print(_c.orange + 'This package needs upgrading, {} → {}'.format(installed, latest) + _c.reset)
+                if not built_now:
+                    self.clean()
+                    self.build(False)
+                upgrades.append(
+                    os.path.join(basedir, self.name, self.get_latest('.deb'))
+                )
 
     def build(self, source=True):
         '''

@@ -72,7 +72,7 @@ class Package(object):
     def __repr__(self):
         return "Package('{}')".format(self.name)
 
-    def auto(self):
+    def auto(self, options):
         print()
         print(_c.cyan + self.name + _c.reset)
         print(_c.cyan + '-'*len(self.name) + _c.reset)
@@ -101,7 +101,7 @@ class Package(object):
             build_now = True
 
         needs_upgrade, installed, latest = self.needs_upgrade()
-        if needs_upgrade and False:
+        if needs_upgrade and options.upgrade:
             print(_c.orange + 'This package needs upgrading, {} → {}'.format(installed, latest) + _c.reset)
             if not build_now:
                 self.clean()
@@ -344,7 +344,7 @@ def main():
     for name in packages:
         try:
             package = Package(name)
-            package.auto()
+            package.auto(options)
         except OSError as e:
             print(_c.red + str(e) + _c.reset)
             print(_c.red + 'Packaging of {0} failed.'.format(package) + _c.reset)
@@ -374,6 +374,7 @@ def _parse_args():
     #parser.add_argument('args', metavar='N', type=str, nargs='*', help='Positional arguments.')
     #parser.add_argument('', dest='', type='', default=, help=)
     parser.add_argument('-n', dest='dry_run', action='store_true', default=False, help='dry run')
+    parser.add_argument('-u', dest='upgrade', action='store_true', default=False, help='use “dpkg -i” to install packages')
     #parser.add_argument('--version', action='version', version='<the version>')
 
     return parser.parse_args()

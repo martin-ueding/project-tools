@@ -94,16 +94,16 @@ class Package(object):
                 self.build(True)
                 self.upload()
 
-        build_now = False
+        built_now = False
 
         if self.needs_building(False):
             self.build(False)
-            build_now = True
+            built_now = True
 
         needs_upgrade, installed, latest = self.needs_upgrade()
         if needs_upgrade and options.upgrade:
             print(_c.orange + 'This package needs upgrading, {} → {}'.format(installed, latest) + _c.reset)
-            if not build_now:
+            if not built_now:
                 self.clean()
                 self.build(False)
             upgrades.append(

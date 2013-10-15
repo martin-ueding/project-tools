@@ -373,7 +373,12 @@ class Package(object):
 def main():
     options = _parse_args()
 
-    logging.basicConfig(level=logging.DEBUG)
+    if options.verbose is not None:
+        if options.verbose > 1:
+            logging.basicConfig(level=logging.DEBUG)
+        elif options.verbose > 0:
+            logging.basicConfig(level=logging.INFO)
+
     logger.debug('Starting up')
 
     check_for_debian()
@@ -424,6 +429,7 @@ def _parse_args():
     #parser.add_argument('', dest='', type='', default=, help=)
     parser.add_argument('-n', dest='dry_run', action='store_true', default=False, help='dry run')
     parser.add_argument('-u', dest='upgrade', action='store_true', default=False, help='use “dpkg -i” to install packages')
+    parser.add_argument('-v', dest='verbose', action='count', help='more output (can be used multiple times)')
     #parser.add_argument('--version', action='version', version='<the version>')
 
     return parser.parse_args()

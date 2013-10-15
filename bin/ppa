@@ -404,8 +404,6 @@ def main():
             print(_c.red + str(e) + _c.reset)
             print(_c.red + 'Packaging of {0} failed.'.format(package) + _c.reset)
 
-        break
-
     if len(upgrades) > 0:
         print()
         print('possible upgrades')

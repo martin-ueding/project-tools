@@ -49,7 +49,7 @@ def check_for_debian():
     dist = platform.dist()
 
     if not dist[0] in ["Debian", "Ubuntu"]:
-        print(_c.red + "This is not a Debian or Ubuntu machine" + _c.reset)
+        logger.error("This is not a Debian or Ubuntu machine. This is {}.".format(dist[0]))
         sys.exit(15)
 
 def p(command):
@@ -84,9 +84,12 @@ class Package(object):
 
         os.chdir(basedir)
 
-        self.export_latest()
-        if self.needs_uupdate():
-            self.uupdate()
+        if self.has_debian_watch():
+            self.uscan()
+        else:
+            self.export_latest()
+            if self.needs_uupdate():
+                self.uupdate()
 
         if self.name in public:
             if self.needs_building(True) or self.needs_new_series():
@@ -94,7 +97,7 @@ class Package(object):
             try:
                 self.upload()
             except PackagingError as e:
-                print('Caught error, trying to build source again.')
+                logger.warning('Caught error, trying to build source again.')
                 self.build(True)
                 self.upload()
 
@@ -107,7 +110,7 @@ class Package(object):
 
             needs_upgrade, installed, latest = self.needs_upgrade()
             if needs_upgrade:
-                print(_c.orange + 'This package needs upgrading, {} → {}'.format(installed, latest) + _c.reset)
+                logger.info('This package needs upgrading, {} → {}'.format(installed, latest))
                 if not built_now:
                     self.clean()
                     self.build(False)
@@ -119,7 +122,7 @@ class Package(object):
         '''
         Builds the given package, binary or source.
         '''
-        logger.info('Building {}'.format('source' if source else 'binary'))
+        logger.debug('Building {}'.format('source' if source else 'binary'))
         latest_folder = self.get_latest_folder()
 
         os.chdir(os.path.join(basedir, self.name, latest_folder, 'debian'))
@@ -146,7 +149,7 @@ class Package(object):
         if self.needs_new_series():
             latest_folder = self.get_latest_folder()
             os.chdir(os.path.join(basedir, self.name, latest_folder, 'debian'))
-            print(_c.orange + 'This needs to be uploaded with the new release.' + _c.reset)
+            logger.info('This needs to be uploaded with the new release.')
             subprocess.check_call(['pwd'])
             subprocess.check_call(['dch', '-D', current_release, 'Rebuild for {}'.format(current_release)])
 
@@ -154,7 +157,7 @@ class Package(object):
         '''
         Remove everything that can be build.
         '''
-        logger.info('Cleaning')
+        logger.debug('Cleaning')
         suffixes = [
             '.deb',
         ]
@@ -162,7 +165,7 @@ class Package(object):
         for suffix in suffixes:
             files = glob.glob('*{}'.format(suffix))
             for file_ in files:
-                print(_c.green + 'Cleaning {}'.format(file_) + _c.reset)
+                logger.debug('Cleaning {}'.format(file_))
                 os.unlink(file_)
 
     def export_latest(self):
@@ -172,7 +175,7 @@ class Package(object):
 
         Changes the current working directory.
         '''
-        logger.info('Exporting latest version with “git release-tar”.')
+        logger.debug('Exporting latest version with “git release-tar”.')
         for d in [branchesdir, os.path.expanduser('~/.vim/bundle')]:
             try:
                 os.chdir(os.path.join(branchesdir, self.name))
@@ -183,7 +186,7 @@ class Package(object):
                 pass
 
     def get_latest(self, suffix, function=None, folder=False):
-        logger.info('Finding latest of “{}”.'.format(suffix))
+        logger.debug('Finding latest of “{}” with filter “{}”.'.format(suffix, str(function)[:9]))
         os.chdir(os.path.join(basedir, self.name))
         output = subprocess.check_output('ls | sort -V', shell=True)
         lines = output.decode().strip().split('\n')
@@ -207,14 +210,14 @@ class Package(object):
         Retrieves the folder (without ``.orig``) which has the latest version
         number. If there is no such folder, ``None`` is returned.
         '''
-        logger.info('Finding latest folders.')
+        logger.debug('Finding latest folders.')
         def function(x):
             return not x.endswith('.orig')
 
         return self.get_latest('', function, folder=True)
 
     def get_latest_tar(self):
-        logger.info('Finding latest .tar.')
+        logger.debug('Finding latest .tar.')
         def function(x):
             return not x.endswith('.orig.tar.gz') and not x.endswith('.debian.tar.gz')
 
@@ -224,7 +227,7 @@ class Package(object):
         '''
         Checks the changelog for the Ubuntu series this package is on.
         '''
-        logger.info('Read the release in the debian/changelog.')
+        logger.debug('Read the release in the debian/changelog.')
         changelog_file = os.path.join(self.get_latest_folder(), 'debian', 'changelog')
 
         with open(changelog_file) as f:
@@ -235,6 +238,14 @@ class Package(object):
         if m:
             return m.group(1)
 
+    def has_debian_watch(self):
+        '''
+        Checks whether this package has a debian/watch file.
+        '''
+        logger.debug('Checking for debian/watch.')
+        latest_folder = self.get_latest_folder()
+        return os.path.isfile(os.path.join(basedir, self.name, latest_folder, 'debian', 'watch'))
+
     def installed_version(self):
         '''
         Checks ``apt-cache`` for the installed version of the package.
@@ -243,7 +254,7 @@ class Package(object):
         very thing. But feel lazy and just get it out of the output and parse
         that.
         '''
-        logger.info('Reading installed version of this package.')
+        logger.debug('Reading installed version of this package.')
         try:
             command = ['apt-cache', 'show', self.name]
             output = subprocess.check_output(command)
@@ -264,7 +275,7 @@ class Package(object):
         It checks the latest ``.changes`` and ``.deb`` in the folder and
         compares them to the latest folder.
         '''
-        logger.info('Determining whether {} need building.'.format('source' if source else 'binary'))
+        logger.debug('Determining whether {} need building.'.format('source' if source else 'binary'))
         os.chdir(os.path.join(basedir, self.name))
 
         latest_folder = self.get_latest_folder()
@@ -282,17 +293,17 @@ class Package(object):
         return latest_folder != prefix
 
     def needs_new_series(self):
-        logger.info('Determine whether this needs a rebuild for this series.')
+        logger.debug('Determine whether this needs a rebuild for this series.')
         release = self.get_release()
         return_value = release != current_release
-        print("Found and current:", release, current_release, return_value)
+        logger.debug("Found and current: release={} current_release={} return={}".format(release, current_release, return_value))
         return return_value
 
     def needs_upgrade(self):
         '''
         Checks whether the package needs to be updated.
         '''
-        logger.info('Determine whether package need to be installed.')
+        logger.debug('Determine whether package need to be installed.')
         installed = self.installed_version()
         latest_deb = self.get_latest('.deb')
         pattern = r'{}_([^_]+)_.+\.deb'.format(self.name)
@@ -303,7 +314,7 @@ class Package(object):
         return latest_version != installed, installed, latest_version
 
     def needs_uupdate(self):
-        logger.info('Determine whether uupdate is needed.')
+        logger.debug('Determine whether uupdate is needed.')
         os.chdir(os.path.join(basedir, self.name))
 
         latest_folder = self.get_latest_folder()
@@ -315,8 +326,8 @@ class Package(object):
         return latest_folder != prefix
 
     def upload(self):
-        logger.info('Upload to Launchpad PPA.')
         changes = self.get_latest('_source.changes')
+        logger.debug('Upload to Launchpad PPA.')
         try:
             os.chdir(os.path.join(basedir, self.name))
             subprocess.check_call(['dput', 'stable', changes])
@@ -331,12 +342,12 @@ class Package(object):
 
         After that, there should be a new latest folder.
         '''
-        logger.info('Perform “uupdate”')
         latest_tar = self.get_latest_tar()
         latest_folder = self.get_latest_folder()
 
         os.chdir(os.path.join(basedir, self.name, latest_folder))
 
+        logger.info('Running “uupdate”.')
         try:
             command = ['uupdate', '../'+latest_tar]
             subprocess.check_call(command)
@@ -344,12 +355,26 @@ class Package(object):
             print(e)
             raise PackagingError('uupdate failed')
 
+    def uscan(self):
+        '''
+        Runs uscan.
+        '''
+        latest_tar = self.get_latest_tar()
+        latest_folder = self.get_latest_folder()
+
+        os.chdir(os.path.join(basedir, self.name, latest_folder))
+
+        logger.info('Running “uscan“.')
+        command = ['uscan']
+        return_value = subprocess.call(command)
+        logger.debug('Return value of uscan is {}.'.format(return_value))
+
 
 def main():
     options = _parse_args()
 
     logging.basicConfig(level=logging.DEBUG)
-    logger.info('Starting up')
+    logger.debug('Starting up')
 
     check_for_debian()
 
@@ -373,6 +398,8 @@ def main():
         except PackagingError as e:
             print(_c.red + str(e) + _c.reset)
             print(_c.red + 'Packaging of {0} failed.'.format(package) + _c.reset)
+
+        break
 
     if len(upgrades) > 0:
         print()

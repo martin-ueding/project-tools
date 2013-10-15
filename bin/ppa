@@ -84,12 +84,12 @@ class Package(object):
 
         os.chdir(basedir)
 
+        self.export_latest()
+        if self.needs_uupdate():
+            self.uupdate()
+
         if self.has_debian_watch():
             self.uscan()
-        else:
-            self.export_latest()
-            if self.needs_uupdate():
-                self.uupdate()
 
         if self.name in public:
             if self.needs_building(True) or self.needs_new_series():

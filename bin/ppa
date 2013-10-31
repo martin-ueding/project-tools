@@ -96,6 +96,7 @@ class Package(object):
                 self.build(True)
             try:
                 self.upload()
+                self.backport()
             except PackagingError as e:
                 logger.warning('Caught error, trying to build source again.')
                 self.build(True)
@@ -167,6 +168,24 @@ class Package(object):
             for file_ in files:
                 logger.debug('Cleaning {}'.format(file_))
                 os.unlink(file_)
+
+    def backport(self):
+        '''
+        Creates backports for the older versions of Ubuntu.
+        '''
+        logger.debug('Backporting ...')
+
+        old_series_list = ['precise', 'quantal', 'raring']
+
+        for old_series in old_series_list:
+            subprocess.check_call([
+                'backportpackage',
+                '-d', old_series,
+                '-r',
+                '-y',
+                '-u', 'stable',
+                self.get_latest('.dsc'),
+            ])
 
     def export_latest(self):
         '''

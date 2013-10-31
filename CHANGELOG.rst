@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.5
+    - *ppa*: Automatic backporting
+
 v1.4
     - *ppa*: Only build when installing packages. This is unneeded work
       otherwise.

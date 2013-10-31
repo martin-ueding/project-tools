@@ -94,9 +94,9 @@ class Package(object):
         if self.name in public:
             if self.needs_building(True) or self.needs_new_series():
                 self.build(True)
+                self.backport()
             try:
                 self.upload()
-                self.backport()
             except PackagingError as e:
                 logger.warning('Caught error, trying to build source again.')
                 self.build(True)

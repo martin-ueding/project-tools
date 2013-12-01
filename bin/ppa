@@ -173,6 +173,9 @@ class Package(object):
         '''
         Creates backports for the older versions of Ubuntu.
         '''
+        if self.name in nobackport:
+            return
+
         logger.debug('Backporting ...')
 
         old_series_list = ['precise', 'quantal', 'raring']
@@ -411,6 +414,13 @@ def main():
         with open(publicfile) as f:
             global public
             public = json.load(f)
+
+    nobackportfile = os.path.expanduser('~/.config/maintenance/nobackport.js')
+
+    if os.path.isfile(nobackportfile):
+        with open(nobackportfile) as f:
+            global nobackport
+            nobackport = json.load(f)
 
     for name in packages:
         try:

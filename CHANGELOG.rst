@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.6
+    - *ppa*: Add ``nobackport.js`` support
+
 v1.5
     - *ppa*: Automatic backporting
 

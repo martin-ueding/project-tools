@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.7
+    - Rewrite some scripts in Python
+
 v1.6
     - *ppa*: Add ``nobackport.js`` support
 

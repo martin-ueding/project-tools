@@ -10,11 +10,16 @@ import os
 import re
 import glob
 import shutil
+import logging
 import subprocess
+
+import projecttools
 
 __docformat__ = "restructuredtext en"
 
 c = colorcodes.Colorcodes()
+
+logger = logging
 
 mirrors = ["chaos", "bitbucket", "github"]
 
@@ -27,24 +32,16 @@ status = {
 last_commits = {}
 commits_file = os.path.expanduser("~/.cache/maintenance/last-commits.js")
 
-def find_repos():
-    outfile = os.path.expanduser("~/.cache/maintenance/git-repos.js")
-
-    repos = []
-
-    with open(outfile) as f:
-        repos = json.loads(f.read())
-
-    return repos
-
 def load_last_commits():
     global last_commits
 
     try:
         with open(commits_file) as f:
             last_commits = json.loads(f.read())
-    except FileNotFoundError:
-        pass
+    except FileNotFoundError as e:
+        logger.warning(e)
+    except ValueError as e:
+        logger.warning(e)
 
 def migrate_to_mirror(repo, remote):
     try:
@@ -67,8 +64,10 @@ def migrate_to_mirror(repo, remote):
 def save_last_commits():
     global last_commits
 
+    exported = json.dumps(last_commits, sort_keys=True, indent=4)
+
     with open(commits_file, "w") as f:
-        f.write(json.dumps(last_commits, sort_keys=True, indent=4))
+        f.write(exported)
 
 def find_remotes(repo):
     os.chdir(repo)
@@ -186,7 +185,7 @@ def main():
     print(c.purple+"Welcome to git-autopush, the next generation."+c.reset)
 
     print(c.cyan+"Populating list of git repositories …"+c.reset)
-    repos = find_repos()
+    repos = projecttools.find_git_repos('~/.vim')
     print(c.cyan+"Done. Found {} git repositories.".format(len(repos))+c.reset)
 
     repos.sort()

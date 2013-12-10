@@ -17,7 +17,7 @@ def find_git_repos(root='~'):
     ]
 
     output = subprocess.check_output(command)
-    repos = output.split(b'\0')
+    repos = [repo.decode() for repo in output.split(b'\0')[:-1]]
     return repos
 
 if __name__ == '__main__':

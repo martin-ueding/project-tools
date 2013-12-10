@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.7.1
+    - Fix clean target
+
 v1.7
     - Rewrite some scripts in Python
 

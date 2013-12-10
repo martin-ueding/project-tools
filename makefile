@@ -11,6 +11,9 @@ all: $(man_pages)
 clean:
 	$(RM) doc/*.1
 	$(RM) doc/*.1.gz
+	$(RM) -r build
+	$(RM) -r dist
+	$(RM) -r *.egg-info
 
 install:
 	install -d "$(DESTDIR)/usr/bin/"

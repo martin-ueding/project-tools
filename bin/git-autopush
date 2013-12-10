@@ -185,7 +185,7 @@ def main():
     print(c.purple+"Welcome to git-autopush, the next generation."+c.reset)
 
     print(c.cyan+"Populating list of git repositories …"+c.reset)
-    repos = projecttools.find_git_repos('~/.vim')
+    repos = projecttools.find_git_repos()
     print(c.cyan+"Done. Found {} git repositories.".format(len(repos))+c.reset)
 
     repos.sort()

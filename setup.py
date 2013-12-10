@@ -12,6 +12,7 @@ setup(
     entry_points = {
         'console_scripts': [
             'git-autopush = projecttools.gitautopush:main',
+            'git-autogc = projecttools.gitautogc:main',
         ],
     },
 )

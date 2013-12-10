@@ -26,6 +26,8 @@ install:
 		install "$$manpage" -m 644 -t "$(DESTDIR)/usr/share/man/man1/"; \
 		done
 
+	./setup.py install
+
 %.1.gz: %.1
 	$(RM) $@
 	gzip $<

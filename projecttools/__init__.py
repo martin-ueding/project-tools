@@ -5,12 +5,14 @@
 
 import os.path
 import subprocess
+import glob
 
 __docformat__ = "restructuredtext en"
 
 def find_git_repos(root='~'):
     command = [
-        'find', os.path.expanduser(root),
+        'find'
+    ] + glob.glob(os.path.join(os.path.expanduser(root), '*')) + [
         '-type', 'd',
         '-name', '.git',
         '-print0',

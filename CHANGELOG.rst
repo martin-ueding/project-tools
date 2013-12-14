@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.7.2
+    - Do not search dotfiles for now
+
 v1.7.1
     - Fix clean target
 

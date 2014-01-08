@@ -1,8 +1,11 @@
-.. Copyright © 2013 Martin Ueding <dev@martin-ueding.de>
+.. Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
 
 #########
 Changelog
 #########
+
+v1.7.3
+    - Search for repos in ``.vim`` and ``.config`` as well
 
 v1.7.2
     - Do not search dotfiles for now

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013 Martin Ueding <dev@martin-ueding.de>
+# Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
 
 import os.path
 import subprocess
@@ -10,9 +10,13 @@ import glob
 __docformat__ = "restructuredtext en"
 
 def find_git_repos(root='~'):
+    dirs = glob.glob(os.path.join(os.path.expanduser(root), '*'))
+    if root == '~':
+        dirs += [os.path.expanduser(x) for x in ['~/.vim', '~/.config']]
+
     command = [
         'find'
-    ] + glob.glob(os.path.join(os.path.expanduser(root), '*')) + [
+    ] + dirs + [
         '-type', 'd',
         '-name', '.git',
         '-print0',

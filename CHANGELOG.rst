@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.7.4
+    - Remove bitbucket
+
 v1.7.3
     - Search for repos in ``.vim`` and ``.config`` as well
 

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013 Martin Ueding <dev@martin-ueding.de>
+# Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
 
 import argparse
 import colorcodes
@@ -21,7 +21,7 @@ c = colorcodes.Colorcodes()
 
 logger = logging
 
-mirrors = ["chaos", "bitbucket", "github"]
+mirrors = ["chaos", "github"]
 
 status = {
     "ok": 0,

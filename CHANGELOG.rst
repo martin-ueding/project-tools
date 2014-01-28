@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.7.5
+    - *ppa*: Remove backports for raring
+
 v1.7.4
     - Remove bitbucket
 

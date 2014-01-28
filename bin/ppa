@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2013 Martin Ueding <dev@martin-ueding.de>
+# Copyright © 2012-2014 Martin Ueding <dev@martin-ueding.de>
 
 '''
 Goes through the folder with my projects, exports the current git tags with
@@ -178,7 +178,7 @@ class Package(object):
 
         logger.debug('Backporting ...')
 
-        old_series_list = ['precise', 'quantal', 'raring']
+        old_series_list = ['precise', 'quantal']
 
         for old_series in old_series_list:
             subprocess.check_call([

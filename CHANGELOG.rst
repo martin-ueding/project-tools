@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.8
+    - Switch to the termcolor module, replacing colorcodes
+
 v1.7.5
     - *ppa*: Remove backports for raring
 

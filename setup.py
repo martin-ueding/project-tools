@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013 Martin Ueding <dev@martin-ueding.de>
+# Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
 
 from setuptools import setup, find_packages
 
@@ -15,4 +15,7 @@ setup(
             'git-autogc = projecttools.gitautogc:main',
         ],
     },
+    install_requires=[
+        'termcolor'
+    ],
 )

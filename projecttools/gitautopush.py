@@ -4,7 +4,7 @@
 # Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
 
 import argparse
-import colorcodes
+import termcolor
 import json
 import os
 import re
@@ -16,8 +16,6 @@ import subprocess
 import projecttools
 
 __docformat__ = "restructuredtext en"
-
-c = colorcodes.Colorcodes()
 
 logger = logging
 
@@ -92,7 +90,7 @@ def fetch(repo, remotes):
         if remote in mirrors:
             continue
 
-        print(c.blue + "{:8} {:12} {}".format("FETCH", remote, repo) + c.reset)
+        termcolor.cprint("{:8} {:12} {}".format("FETCH", remote, repo), 'blue')
         subprocess.call(["git", "fetch", remote, "--prune"])
 
 def init(repo, remotes):
@@ -111,7 +109,7 @@ def init(repo, remotes):
         if mirror in remotes:
             continue
 
-        print(c.red + "{:8} {:12} {}".format("INIT", mirror, repo) + c.reset)
+        termcolor.cprint("{:8} {:12} {}".format("INIT", mirror, repo), 'red')
         global status
         status["init"] += 1
         subprocess.call(["git", "init-{}".format(mirror), remote_name])
@@ -141,10 +139,10 @@ def push(repo, remotes):
             #print("master:", master_commit, "last", last_commit)
             if master_commit == last_commit:
                 status["ok"] += 1
-                print(c.green + "{:8} {:12} {}".format("OK", remote, repo) + c.reset)
+                termcolor.cprint("{:8} {:12} {}".format("OK", remote, repo), 'green')
             else:
                 status["push"] += 1
-                print(c.orange + "{:8} {:12} {}".format("PUSH", remote, repo) + c.reset)
+                termcolor.cprint("{:8} {:12} {}".format("PUSH", remote, repo), 'yellow')
                 try:
                     subprocess.check_call(["git", "push", remote, "--mirror"])
                 except subprocess.CalledProcessError as e:
@@ -166,7 +164,7 @@ def find_remote_name(repo, remotes):
 
     if reponame is None:
         reponame = os.path.basename(repo)
-        print(c.red+"Could not determine remote name for {}!.".format(os.path.basename(repo))+c.reset)
+        termcolor.cprint("Could not determine remote name for {}!.".format(os.path.basename(repo)), 'red')
 
     return reponame
 
@@ -175,18 +173,16 @@ def print_stats():
 
     global status
     for status, number in sorted(status.items()):
-        print(c.cyan + "{:8} {:4d}".format(status, number) + c.reset)
+        termcolor.cprint("{:8} {:4d}".format(status, number), 'cyan')
 
 def main():
     options = _parse_args()
 
     load_last_commits()
 
-    print(c.purple+"Welcome to git-autopush, the next generation."+c.reset)
-
-    print(c.cyan+"Populating list of git repositories …"+c.reset)
+    termcolor.cprint("Populating list of git repositories …", 'cyan')
     repos = projecttools.find_git_repos()
-    print(c.cyan+"Done. Found {} git repositories.".format(len(repos))+c.reset)
+    termcolor.cprint("Done. Found {} git repositories.".format(len(repos)), 'cyan')
 
     repos.sort()
 

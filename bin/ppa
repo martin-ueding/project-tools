@@ -20,12 +20,9 @@ import platform
 import re
 import subprocess
 import sys
-
-import colorcodes
+import termcolor
 
 __docformat__ = 'restructuredtext en'
-
-_c = colorcodes.Colorcodes()
 
 current_release = platform.dist()[2]
 '''
@@ -77,10 +74,7 @@ class Package(object):
         return "Package('{}')".format(self.name)
 
     def auto(self, options):
-        print()
-        print(_c.cyan + self.name + _c.reset)
-        print(_c.cyan + '-'*len(self.name) + _c.reset)
-        print()
+        termcolor.cprint(self.name, 'cyan')
 
         os.chdir(basedir)
 
@@ -427,11 +421,11 @@ def main():
             package = Package(name)
             package.auto(options)
         except OSError as e:
-            print(_c.red + str(e) + _c.reset)
-            print(_c.red + 'Packaging of {0} failed.'.format(package) + _c.reset)
+            termcolor.cprint(e, 'red')
+            termcolor.cprint('Packaging of {0} failed.'.format(package), 'red')
         except PackagingError as e:
-            print(_c.red + str(e) + _c.reset)
-            print(_c.red + 'Packaging of {0} failed.'.format(package) + _c.reset)
+            termcolor.cprint(e, 'red')
+            termcolor.cprint('Packaging of {0} failed.'.format(package), 'red')
 
     if len(upgrades) > 0:
         print()

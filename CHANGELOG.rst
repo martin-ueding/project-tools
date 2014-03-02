@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.9
+    - Add git repo merge script
+
 v1.8
     - Switch to the termcolor module, replacing colorcodes
 

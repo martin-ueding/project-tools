@@ -51,19 +51,20 @@ def powershell_merge(repo, repos):
     '''
     excludes = [repo.prefix for repo in repos]
     subprocess.check_call(['git', 'merge', repo.remote+'/master', '-m', 'Merge “{}” into main directory'.format(repo.prefix)])
+
     os.mkdir(repo.prefix)
-    command = ['find', '.', '-type', 'f']
+
     excludes.append('.git')
-    for exclude in excludes:
-        command.append('-and')
-        command.append('(')
-        command.append('-not')
-        command.append('-path')
-        command.append('./{}/*'.format(exclude))
-        command.append(')')
-    command += ['-print', '-exec', 'git', 'mv', '{}', repo.prefix, ';']
-    print(' '.join(command))
-    subprocess.check_call(command)
+    for entry in os.listdir('.'):
+        print(entry)
+        if entry in excludes:
+            print('“{}” is being ignored.'.format(entry))
+            continue
+        if os.path.isdir(entry) and len(os.listdir(entry)) == 0:
+            print('Skipping empty directory “{}”.'.format(entry))
+            continue
+        command = ['git', 'mv', entry, repo.prefix+'/']
+        subprocess.check_call(command)
 
     # Commit the move
     subprocess.check_call(['git', 'commit', '-m', 'Move “{}” files into subdir'.format(repo.prefix)])

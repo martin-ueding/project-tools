@@ -47,7 +47,7 @@ def powershell_merge(repo, repos):
     http://saintgimp.org/2013/01/22/merging-two-git-repositories-into-one-repository-without-losing-file-history/
     '''
     excludes = [repo.prefix for repo in repos]
-    subprocess.check_call(['git', 'merge', repo.remote+'/master', '-m', 'Merge “{}” as a subdirectory'.format(repo.prefix)])
+    subprocess.check_call(['git', 'merge', repo.remote+'/master', '-m', 'Merge “{}” into main directory'.format(repo.prefix)])
     os.mkdir(repo.prefix)
     command = ['find', '.', '-type', 'f']
     excludes.append('.git')

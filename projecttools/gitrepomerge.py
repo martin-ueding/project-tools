@@ -56,7 +56,7 @@ def powershell_merge(repo, repos):
         command.append('(')
         command.append('-not')
         command.append('-path')
-        command.append('*{}*'.format(exclude))
+        command.append('./{}/*'.format(exclude))
         command.append(')')
     command += ['-print', '-exec', 'git', 'mv', '{}', repo.prefix, ';']
     print(' '.join(command))

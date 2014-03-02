@@ -4,6 +4,9 @@
 Changelog
 #########
 
+v1.9.1
+    - Use Python instead of ``find``
+
 v1.9
     - Add git repo merge script
 

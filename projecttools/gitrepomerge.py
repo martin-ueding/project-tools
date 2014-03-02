@@ -37,6 +37,9 @@ def main():
         subprocess.check_call(['git', 'remote', 'rm', repo.remote])
 
 def subtree_merge(repo):
+    '''
+    http://stackoverflow.com/a/1426163
+    '''
     subprocess.check_call(['git', 'merge', '-s', 'ours', '--no-commit', '{}/master'.format(repo.remote)])
     subprocess.check_call(['git', 'read-tree', '--prefix={}/'.format(repo.prefix), '-u', '{}/master'.format(repo.remote)])
     subprocess.check_call(['git', 'commit', '-m', "Merge “{}” as a subdirectory".format(repo.prefix)])

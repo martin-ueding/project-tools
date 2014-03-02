@@ -13,6 +13,7 @@ setup(
         'console_scripts': [
             'git-autopush = projecttools.gitautopush:main',
             'git-autogc = projecttools.gitautogc:main',
+            'git-repo-merge = projecttools.gitrepomerge:main',
         ],
     },
     install_requires=[

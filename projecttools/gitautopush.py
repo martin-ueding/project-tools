@@ -68,12 +68,12 @@ def save_last_commits():
         f.write(exported)
 
 def find_remotes(repo):
-    os.chdir(repo)
     output = subprocess.check_output(["git", "remote"]).decode().strip()
     remotes = [x for x in output.split("\n") if len(x) > 0]
     return remotes
 
 def handle_repo(repo, options):
+    os.chdir(repo.replace('.git', ''))
     remotes = find_remotes(repo)
 
 	# If there are no remotes in this repo, there is nothing more to do.

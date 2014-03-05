@@ -14,6 +14,7 @@ setup(
             'git-autogc = projecttools.gitautogc:main',
             'git-autopush = projecttools.gitautopush:main',
             'git-init-chaos = projecttools.gitinit:entry_init_chaos',
+            'git-spull = projecttools.git:spull',
             'git-init-default = projecttools.gitinit:entry_init_default',
             'git-init-github = projecttools.gitinit:entry_init_github',
             'git-repo-merge = projecttools.gitrepomerge:main',

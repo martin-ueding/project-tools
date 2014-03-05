@@ -14,6 +14,7 @@ setup(
             'git-autopush = projecttools.gitautopush:main',
             'git-autogc = projecttools.gitautogc:main',
             'git-repo-merge = projecttools.gitrepomerge:main',
+            'ppa = projecttools.ppa:main',
         ],
     },
     install_requires=[

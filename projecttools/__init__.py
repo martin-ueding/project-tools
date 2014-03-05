@@ -23,6 +23,16 @@ def get_config():
     return _config
 
 def find_git_repos(root='~'):
+    '''
+    Finds git repos in the given path.
+
+    Uses ``find`` to find all directories that end with ``.git`` and lists
+    them. It uses zero-separated strings, which makes it safe for any file
+    name.
+
+    :param root: Starting point
+    :type root: str
+    '''
     dirs = glob.glob(os.path.join(os.path.expanduser(root), '*'))
     if root == '~':
         dirs += [os.path.expanduser(x) for x in ['~/.vim', '~/.config']]

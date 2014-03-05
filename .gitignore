@@ -4,3 +4,4 @@
 build/
 dist/
 projecttools.egg-info/
+doc/_build/

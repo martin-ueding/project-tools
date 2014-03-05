@@ -65,6 +65,11 @@ def entry_init_github():
     options = _parse_args()
     init_github(options.name)
 
+def entry_init_default():
+    options = _parse_args()
+    init_github(options.name)
+    init_chaos(options.name)
+
 def main():
     options = _parse_args()
 

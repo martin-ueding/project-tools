@@ -11,11 +11,12 @@ setup(
     packages = find_packages(),
     entry_points = {
         'console_scripts': [
-            'python-find2 = projecttools.find2:main',
-            'git-autopush = projecttools.gitautopush:main',
             'git-autogc = projecttools.gitautogc:main',
+            'git-autopush = projecttools.gitautopush:main',
             'git-repo-merge = projecttools.gitrepomerge:main',
+            'github-repo-count = projecttools.githubrepocount:main',
             'ppa = projecttools.ppa:main',
+            'python-find2 = projecttools.find2:main',
         ],
     },
     install_requires=[

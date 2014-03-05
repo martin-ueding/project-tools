@@ -13,7 +13,8 @@ setup(
         'console_scripts': [
             'git-autogc = projecttools.gitautogc:main',
             'git-autopush = projecttools.gitautopush:main',
-            'git-init-github = projecttools.gitinit:entry_git_init',
+            'git-init-chaos = projecttools.gitinit:entry_init_chaos',
+            'git-init-github = projecttools.gitinit:entry_init_github',
             'git-repo-merge = projecttools.gitrepomerge:main',
             'github-repo-count = projecttools.githubrepocount:main',
             'ppa = projecttools.ppa:main',

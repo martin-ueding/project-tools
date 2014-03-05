@@ -30,8 +30,6 @@ def push_remote(remote):
     subprocess.check_call(['git', 'push', remote])
 
 def init_chaos(name):
-    config = projecttools.get_config()
-
     subprocess.check_call(['ssh', 'chaos', '/home/mu/bin/create-bare', name])
     remove_duplicate_remote('chaos')
     add_push_mirror('chaos', 'chaos:public_html/git/{}.git'.format(name))

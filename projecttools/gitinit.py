@@ -17,14 +17,17 @@ __docformat__ = "restructuredtext en"
 
 logger = logging.getLogger(__name__)
 
-def init_github():
+def entry_init_github()
     options = _parse_args()
+    init_github(options.name)
+
+def init_github(name):
     config = projecttools.get_config()
 
     github_user = config['GitHub']['user']
     github_pass = config['GitHub']['password']
 
-    data = {'name': options.name}
+    data = {'name': name}
 
     r = requests.post('https://api.github.com/user/repos', data=json.dumps(data), auth=(github_user, github_pass))
     j = r.json()
@@ -38,10 +41,10 @@ def init_github():
     remotes = subprocess.check_output(['git', 'remote']).decode().split()
 
     if 'github' in remotes:
-        logger.warning('“{}” already has remote “github”.'.format(options.name))
+        logger.warning('“{}” already has remote “github”.'.format(name))
         subprocess.check_call(['git', 'remote', 'rm', 'github'])
 
-    subprocess.check_call(['git', 'remote', 'add', 'github', 'git@github.com:{}/{}.git'.format(github_user, options.name), '--mirror=push'])
+    subprocess.check_call(['git', 'remote', 'add', 'github', 'git@github.com:{}/{}.git'.format(github_user, name), '--mirror=push'])
     subprocess.check_call(['git', 'push', 'github'])
 
 def main():

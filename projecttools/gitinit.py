@@ -7,7 +7,7 @@ import argparse
 import logging
 import json
 import subprocess
-import pprint
+import sys
 
 import requests
 
@@ -21,7 +21,6 @@ def init_github():
     options = _parse_args()
     config = projecttools.get_config()
 
-    pp = pprint.PrettyPrinter()
     github_user = config['GitHub']['user']
     github_pass = config['GitHub']['password']
 
@@ -29,7 +28,10 @@ def init_github():
 
     r = requests.post('https://api.github.com/user/repos', data=json.dumps(data), auth=(github_user, github_pass))
     j = r.json()
-    pp.pprint(j)
+    if r.status_code != 200:
+        for error in j['errors']:
+            logger.error(error['message'])
+        sys.exit(1)
 
     print('GitHub page:', j['html_url'])
 

@@ -1,34 +1,24 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013 Martin Ueding <dev@martin-ueding.de>
+# Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
 
 """
 Retrieves a list of GitHub repositories with the GitHub API and counts them.
 """
 
 import argparse
-import urllib.request
-import json
+
+import requests
 
 __docformat__ = "restructuredtext en"
 
 def main():
     options = _parse_args()
 
-    filename, header = urllib.request.urlretrieve("https://api.github.com/users/{}/repos".format(options.username))
-    with open(filename) as fp:
-        repos = json.load(fp)
-
-    names = [repo["name"] for repo in repos]
-
-    names.sort()
-
-    for name in names:
-        print(name)
-
-    print()
-    print("Total: ", len(repos))
+    r = requests.get("https://api.github.com/users/{}".format(options.username))
+    data = r.json()
+    print(data['public_repos'])
 
 
 def _parse_args():

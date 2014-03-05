@@ -17,23 +17,11 @@ __docformat__ = "restructuredtext en"
 
 logger = logging.getLogger(__name__)
 
-def remove_duplicate_remote(remote):
-    remotes = subprocess.check_output(['git', 'remote']).decode().split()
-    if remote in remotes:
-        logger.warning('This already has remote “{}”.'.format(remote))
-        subprocess.check_call(['git', 'remote', 'rm', remote])
-
-def add_push_mirror(remote, url):
-    subprocess.check_call(['git', 'remote', 'add', remote, url, '--mirror=push'])
-
-def push_remote(remote):
-    subprocess.check_call(['git', 'push', remote])
-
 def init_chaos(name):
     subprocess.check_call(['ssh', 'chaos', '/home/mu/bin/create-bare', name])
-    remove_duplicate_remote('chaos')
-    add_push_mirror('chaos', 'chaos:public_html/git/{}.git'.format(name))
-    push_remote('chaos')
+    projecttools.git.remove_duplicate_remote('chaos')
+    projecttools.git.add_push_mirror('chaos', 'chaos:public_html/git/{}.git'.format(name))
+    projecttools.git.push_remote('chaos')
 
 
 def init_github(name):
@@ -53,9 +41,9 @@ def init_github(name):
 
     print('GitHub page:', j['html_url'])
 
-    remove_duplicate_remote('github')
-    add_push_mirror('github', 'git@github.com:{}/{}.git'.format(github_user, name))
-    push_remote('github')
+    projecttools.git.remove_duplicate_remote('github')
+    projecttools.git.add_push_mirror('github', 'git@github.com:{}/{}.git'.format(github_user, name))
+    projecttools.git.push_remote('github')
 
 def entry_init_chaos():
     options = _parse_args()

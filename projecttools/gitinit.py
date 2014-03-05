@@ -46,7 +46,7 @@ def init_github(name):
 
     r = requests.post('https://api.github.com/user/repos', data=json.dumps(data), auth=(github_user, github_pass))
     j = r.json()
-    if not 200 <= r.status_code < 300:
+    if not r.status_code == requests.codes.ok:
         for error in j['errors']:
             logger.error(error['message'])
         sys.exit(1)

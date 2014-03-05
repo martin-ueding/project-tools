@@ -17,9 +17,26 @@ __docformat__ = "restructuredtext en"
 
 logger = logging.getLogger(__name__)
 
-def entry_init_github()
-    options = _parse_args()
-    init_github(options.name)
+def remove_duplicate_remote(remote):
+    remotes = subprocess.check_output(['git', 'remote']).decode().split()
+    if remote in remotes:
+        logger.warning('This already has remote “{}”.'.format(remote))
+        subprocess.check_call(['git', 'remote', 'rm', remote])
+
+def add_push_mirror(remote, url):
+    subprocess.check_call(['git', 'remote', 'add', remote, url, '--mirror=push'])
+
+def push_remote(remote):
+    subprocess.check_call(['git', 'push', remote])
+
+def init_chaos(name):
+    config = projecttools.get_config()
+
+    subprocess.check_call(['ssh', 'chaos', '/home/mu/bin/create-bare', name])
+    remove_duplicate_remote('chaos')
+    add_push_mirror('chaos', 'chaos:public_html/git/{}.git'.format(name))
+    push_remote('chaos')
+
 
 def init_github(name):
     config = projecttools.get_config()
@@ -31,21 +48,24 @@ def init_github(name):
 
     r = requests.post('https://api.github.com/user/repos', data=json.dumps(data), auth=(github_user, github_pass))
     j = r.json()
-    if r.status_code != 200:
+    if not 200 <= r.status_code < 300:
         for error in j['errors']:
             logger.error(error['message'])
         sys.exit(1)
 
     print('GitHub page:', j['html_url'])
 
-    remotes = subprocess.check_output(['git', 'remote']).decode().split()
+    remove_duplicate_remote('github')
+    add_push_mirror('github', 'git@github.com:{}/{}.git'.format(github_user, name))
+    push_remote('github')
 
-    if 'github' in remotes:
-        logger.warning('“{}” already has remote “github”.'.format(name))
-        subprocess.check_call(['git', 'remote', 'rm', 'github'])
+def entry_init_chaos():
+    options = _parse_args()
+    init_chaos(options.name)
 
-    subprocess.check_call(['git', 'remote', 'add', 'github', 'git@github.com:{}/{}.git'.format(github_user, name), '--mirror=push'])
-    subprocess.check_call(['git', 'push', 'github'])
+def entry_init_github():
+    options = _parse_args()
+    init_github(options.name)
 
 def main():
     options = _parse_args()

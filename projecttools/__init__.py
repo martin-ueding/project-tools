@@ -3,11 +3,24 @@
 
 # Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
 
+import glob
+import configparser
 import os.path
 import subprocess
-import glob
 
 __docformat__ = "restructuredtext en"
+
+_config = None
+
+def get_config():
+    if _config is None:
+        configfile = os.path.expanduser('~/.config/project-tools/conf.ini')
+        config = configparser.ConfigParser()
+        config.read(configfile)
+        global _config
+        _config = config
+
+    return _config
 
 def find_git_repos(root='~'):
     dirs = glob.glob(os.path.join(os.path.expanduser(root), '*'))

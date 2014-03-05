@@ -7,5 +7,5 @@ import subprocess
 
 __docformat__ = "restructuredtext en"
 
-def spull():
+def submodule_pull():
     subprocess.check_call(['git', 'submodule', 'foreach', 'git', 'pull', 'origin', 'master'])

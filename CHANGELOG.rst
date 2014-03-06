@@ -4,6 +4,12 @@
 Changelog
 #########
 
+v1.10
+    - Update version in ``setup.py``
+    - Move Python scripts into package
+    - Convert ``spull`` script into Python
+    - Convert ``git-init-default`` script
+
 v1.9.1
     - Use Python instead of ``find``
 

@@ -8,6 +8,7 @@ import concurrent.futures
 import glob
 import os
 import platform
+import subprocess
 
 import requests
 
@@ -47,7 +48,7 @@ class MakefileTargetCheck(Check):
         makefile = self.find_makefile()
         if makefile is not None:
             with open(makefile) as f:
-                for line in makefile:
+                for line in f:
                     if line.startswith(self.target + ':'):
                         return True
 
@@ -142,6 +143,13 @@ class CheckPackage(Check):
 
         return False
 
+class CheckUntaggedCommits(Check):
+    message = 'untagged-commits'
+
+    def succeeds(self):
+        log = subprocess.check_output(['git', 'log', '--oneline', '--decorate', 'master^..master'])
+        return b'tag: ' in log
+
 check_classes = [
     CheckChangelog,
     CheckChaos,
@@ -155,8 +163,10 @@ check_classes = [
     CheckMakeHtml,
     CheckReadme,
     CheckTags,
+    CheckPackage,
     CheckPpa,
     CheckWebsite,
+    CheckUntaggedCommits,
 ]
 
 def main():

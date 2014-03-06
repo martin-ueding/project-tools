@@ -161,14 +161,14 @@ check_classes = [
     CheckMakeClean,
     CheckMakeDistclean,
     CheckMakeInstall,
-    CheckScm,
     CheckMakeHtml,
-    CheckReadme,
-    CheckTags,
     CheckPackage,
     CheckPpa,
-    CheckWebsite,
+    CheckReadme,
+    CheckScm,
+    CheckTags,
     CheckUntaggedCommits,
+    CheckWebsite,
 ]
 
 def main():

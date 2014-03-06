@@ -4,9 +4,10 @@
 # Copyright © 2014 Martin Ueding <dev@martin-ueding.de>
 
 import argparse
-import glob
 import concurrent.futures
+import glob
 import os
+import platform
 
 import requests
 
@@ -113,6 +114,15 @@ class CheckWebsite(UrlExistsCheck):
         name = projecttools.git.get_project_name(os.getcwd())
         self.url = 'http://martin-ueding.de/projects/{}/'.format(name)
 
+class CheckPpa(Check):
+    message = 'no-ppa'
+
+    def succeeds(self):
+        dist, version, codename = platform.dist()
+        name = projecttools.git.get_project_name(os.getcwd())
+        r = requests.get('https://launchpad.net/~martin-ueding/+archive/stable/+packages?field.series_filter={}&batch=300'.format(codename))
+        return name in r.text
+
 
 check_classes = [
     CheckChangelog,
@@ -126,6 +136,7 @@ check_classes = [
     CheckMakeHtml,
     CheckReadme,
     CheckTags,
+    CheckPpa,
     CheckWebsite,
 ]
 

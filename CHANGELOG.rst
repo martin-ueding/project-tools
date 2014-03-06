@@ -4,10 +4,13 @@
 Changelog
 #########
 
+v1.11
+    - Convert ``git-release-tar`` to Python
+
 v1.10
     - Update version in ``setup.py``
     - Move Python scripts into package
-    - Convert ``spull`` script into Python
+    - Convert ``spull`` script to Python
     - Convert ``git-init-default`` script
 
 v1.9.1

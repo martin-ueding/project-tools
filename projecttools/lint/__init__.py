@@ -31,6 +31,25 @@ class UrlExistsCheck(Check):
         r = requests.get(self.url)
         return r.status_code == requests.codes.ok
 
+class MakefileTargetCheck(Check):
+    def __init__(self):
+        self.message = 'no-make-' + self.target
+
+    @staticmethod
+    def find_makefile():
+        for path in ['makefile', 'Makefile']:
+            if os.path.isfile(path):
+                return path
+        return None
+
+    def succeeds(self):
+        makefile = self.find_makefile()
+        if makefile is not None:
+            with open(makefile) as f:
+                for line in makefile:
+                    if line.startswith(self.target + ':'):
+                        return True
+
 class CheckChangelog(Check):
     message = 'no-changelog'
 
@@ -63,11 +82,51 @@ class CheckMakefile(Check):
     def succeeds(self):
         return self.glob_exists('makefile', 'Makefile')
 
+class CheckMakeClean(MakefileTargetCheck):
+    target = 'clean'
+
+class CheckMakeDistclean(MakefileTargetCheck):
+    target = 'distclean'
+
+class CheckMakeInstall(MakefileTargetCheck):
+    target = 'install'
+
+class CheckMakeHtml(MakefileTargetCheck):
+    target = 'html'
+
+class CheckReadme(Check):
+    message = 'no-readme'
+
+    def succeeds(self):
+        return self.glob_exists('README*', 'readme*')
+
+class CheckTags(Check):
+    message = 'no-tags'
+
+    def succeeds(Check):
+        return len(projecttools.git.get_tags()) > 0
+
+class CheckWebsite(UrlExistsCheck):
+    message = 'no-website'
+
+    def __init__(self):
+        name = projecttools.git.get_project_name(os.getcwd())
+        self.url = 'http://martin-ueding.de/projects/{}/'.format(name)
+
+
 check_classes = [
     CheckChangelog,
     CheckChaos,
     CheckCopying,
     CheckGithub,
+    CheckMakefile,
+    CheckMakeClean,
+    CheckMakeDistclean,
+    CheckMakeInstall,
+    CheckMakeHtml,
+    CheckReadme,
+    CheckTags,
+    CheckWebsite,
 ]
 
 def main():

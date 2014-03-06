@@ -147,7 +147,9 @@ class CheckUntaggedCommits(Check):
     message = 'untagged-commits'
 
     def succeeds(self):
-        log = subprocess.check_output(['git', 'log', '--oneline', '--decorate', 'master^..master'])
+        log = subprocess.check_output(
+            ['git', 'log', '--oneline', '--decorate', 'master^..master']
+        )
         return b'tag: ' in log
 
 check_classes = [
@@ -206,7 +208,7 @@ def _parse_args():
             logging.basicConfig(level=logging.INFO)
         elif options.verbose == 2:
             logging.basicConfig(level=logging.DEBUG)
-    except NameError as e:
+    except NameError:
         pass
 
     return options

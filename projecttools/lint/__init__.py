@@ -195,21 +195,7 @@ def _parse_args():
     :rtype: Namespace
     """
     parser = argparse.ArgumentParser(description="")
-    #parser.add_argument("args", metavar="N", type=str, nargs="*", help="Positional arguments.")
-    #parser.add_argument("", dest="", type="", default=, help=)
-    #parser.add_argument("--version", action="version", version="<the version>")
-    parser.add_argument("-v", dest='verbose', action="count", help='Enable verbose output. Can be supplied multiple times for even more verbosity.')
-
     options = parser.parse_args()
-
-    # Try to set the logging level in case the logging module is imported.
-    try:
-        if options.verbose == 1:
-            logging.basicConfig(level=logging.INFO)
-        elif options.verbose == 2:
-            logging.basicConfig(level=logging.DEBUG)
-    except NameError:
-        pass
 
     return options
 

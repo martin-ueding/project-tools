@@ -4,14 +4,15 @@
 # Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
 
 import argparse
-import termcolor
+import glob
 import json
+import logging
 import os
 import re
-import glob
 import shutil
-import logging
 import subprocess
+
+import termcolor
 
 import projecttools
 

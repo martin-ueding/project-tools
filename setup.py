@@ -7,7 +7,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="projecttools",
-    version="1.10",
+    version="1.11",
     packages=find_packages(),
     entry_points={
         'console_scripts': [

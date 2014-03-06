@@ -6,6 +6,7 @@
 import argparse
 import logging
 import os
+import subprocess
 import re
 
 import projecttools.git
@@ -33,7 +34,22 @@ def archive_tags(path, destination, pattern):
                 version=version,
             )
 
-            print(tar_file)
+            if os.path.isfile(tar_file):
+                continue
+
+            print(name, version)
+
+            tar_dir = os.path.dirname(tar_file)
+            logging.debug(tar_dir)
+            if not os.path.isdir(tar_dir):
+                os.makedirs(tar_dir, exist_ok=True)
+
+            subprocess.check_call('git archive --prefix="{project}-{version}/" {tag} | gzip > {tar_file}'.format(
+                project=name,
+                version=version,
+                tag=tag,
+                tar_file=tar_file,
+            ), shell=True)
 
 
 def main():
@@ -59,7 +75,7 @@ def _parse_args():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument("project", nargs="*", help="Projects to export")
-    parser.add_argument("-d", dest="destination")
+    parser.add_argument("-d", dest="destination", default=os.path.expanduser('~/debuild'))
     parser.add_argument("--version-regex", default='v(.+)', help='Default: %(default)s')
     #parser.add_argument("--version", action="version", version="<the version>")
     parser.add_argument("-v", dest='verbose', action="count", help='Enable verbose output. Can be supplied multiple times for even more verbosity.')
@@ -72,7 +88,7 @@ def _parse_args():
             logging.basicConfig(level=logging.INFO)
         elif options.verbose == 2:
             logging.basicConfig(level=logging.DEBUG)
-    except NameError as e:
+    except NameError:
         pass
 
     return options

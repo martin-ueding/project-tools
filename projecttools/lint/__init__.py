@@ -123,6 +123,24 @@ class CheckPpa(Check):
         r = requests.get('https://launchpad.net/~martin-ueding/+archive/stable/+packages?field.series_filter={}&batch=300'.format(codename))
         return name in r.text
 
+class CheckScm(Check):
+    message = 'no-scm'
+
+    def succeeds(self):
+        return self.glob_exists('.git', '.bzr', '.svn', '.hg')
+
+class CheckPackage(Check):
+    message = 'no-package'
+
+    def succeeds(self):
+        name = projecttools.git.get_project_name(os.getcwd())
+        package_path = os.path.join(os.path.expanduser('~/debuild'), name)
+        contents = os.listdir(package_path)
+        for entry in contents:
+            if os.path.isdir(os.path.join(package_path, entry)):
+                return True
+
+        return False
 
 check_classes = [
     CheckChangelog,
@@ -133,6 +151,7 @@ check_classes = [
     CheckMakeClean,
     CheckMakeDistclean,
     CheckMakeInstall,
+    CheckScm,
     CheckMakeHtml,
     CheckReadme,
     CheckTags,

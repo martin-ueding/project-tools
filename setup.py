@@ -17,6 +17,7 @@ setup(
             'git-init-default = projecttools.gitinit:entry_init_default',
             'git-init-github = projecttools.gitinit:entry_init_github',
             'git-repo-merge = projecttools.gitrepomerge:main',
+            'git-release-tar = projecttools.git.releasetar:main',
             'git-spull = projecttools.git:submodule_pull',
             'github-repo-count = projecttools.githubrepocount:main',
             'ppa = projecttools.ppa:main',

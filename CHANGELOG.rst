@@ -4,14 +4,17 @@
 Changelog
 #########
 
+v1.12
+    - Convert ``prolint`` to Python 3
+
 v1.11
-    - Convert ``git-release-tar`` to Python
+    - Convert ``git-release-tar`` to Python 3
 
 v1.10
     - Update version in ``setup.py``
     - Move Python scripts into package
-    - Convert ``spull`` script to Python
-    - Convert ``git-init-default`` script
+    - Convert ``spull`` script to Python 3
+    - Convert ``git-init-default`` script to Python 3
 
 v1.9.1
     - Use Python instead of ``find``

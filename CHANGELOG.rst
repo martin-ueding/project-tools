@@ -4,7 +4,14 @@
 Changelog
 #########
 
+v1.12.1
+    Released: 2014-03-07
+
+    - Fix makefile
+
 v1.12
+    Released: 2014-03-07
+
     - Convert ``prolint`` to Python 3
 
 v1.11

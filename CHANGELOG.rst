@@ -4,6 +4,11 @@
 Changelog
 #########
 
+v1.12.2
+    Released:
+
+    - Really fix makefile (I hope)
+
 v1.12.1
     Released: 2014-03-07
 

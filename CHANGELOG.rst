@@ -4,6 +4,12 @@
 Changelog
 #########
 
+v1.13
+    - Change paths to ``~/.config/project-tools`` and
+      ``~/.cache/project-tools``.
+    - Delete two remaining bash scripts: ``compress-tarball`` and
+      ``git-no-tags``.
+
 v1.12.2
     Released:
 

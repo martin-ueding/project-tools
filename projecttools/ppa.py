@@ -402,14 +402,14 @@ def main():
     if options.dry_run:
         subprocess.check_call = p
 
-    publicfile = os.path.expanduser('~/.config/maintenance/public.js')
+    publicfile = os.path.expanduser('~/.config/project-tools/public.js')
 
     if os.path.isfile(publicfile):
         with open(publicfile) as f:
             global public
             public = json.load(f)
 
-    nobackportfile = os.path.expanduser('~/.config/maintenance/nobackport.js')
+    nobackportfile = os.path.expanduser('~/.config/project-tools/nobackport.js')
 
     if os.path.isfile(nobackportfile):
         with open(nobackportfile) as f:

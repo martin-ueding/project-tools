@@ -29,7 +29,7 @@ status = {
 }
 
 last_commits = {}
-commits_file = os.path.expanduser("~/.cache/maintenance/last-commits.js")
+commits_file = os.path.expanduser("~/.cache/project-tools/last-commits.js")
 
 def load_last_commits():
     global last_commits

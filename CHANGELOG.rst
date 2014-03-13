@@ -4,11 +4,18 @@
 Changelog
 #########
 
+v1.14
+    Released: 2014-03-13
+
+    - Create backports for trusty automatically, so that beta testers can use
+      my software
+
 v1.13
+    Released: 2014-03-12
     - Change paths to ``~/.config/project-tools`` and
-      ``~/.cache/project-tools``.
+      ``~/.cache/project-tools``
     - Delete two remaining bash scripts: ``compress-tarball`` and
-      ``git-no-tags``.
+      ``git-no-tags``
 
 v1.12.2
     Released:

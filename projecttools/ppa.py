@@ -172,7 +172,7 @@ class Package(object):
 
         logger.debug('Backporting ...')
 
-        old_series_list = ['precise', 'quantal']
+        old_series_list = ['precise', 'quantal', 'trusty']
 
         for old_series in old_series_list:
             subprocess.check_call([

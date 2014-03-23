@@ -4,6 +4,11 @@
 Changelog
 #########
 
+v1.15
+    Released: 2014-03-23
+
+    - Use OAuth API token instead of GitHub password
+
 v1.14
     Released: 2014-03-13
 

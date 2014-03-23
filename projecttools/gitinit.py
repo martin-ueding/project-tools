@@ -40,16 +40,18 @@ def init_github(name):
     config = projecttools.get_config()
 
     github_user = config['GitHub']['user']
-    github_pass = config['GitHub']['password']
+    github_token = config['GitHub']['token']
 
     data = {'name': name}
+    headers = {'Authorization': 'token ' + github_token}
 
-    r = requests.post('https://api.github.com/user/repos', data=json.dumps(data), auth=(github_user, github_pass))
+    r = requests.post('https://api.github.com/user/repos', data=json.dumps(data), headers=headers)
     j = r.json()
     if not r.status_code == requests.codes.ok:
-        for error in j['errors']:
-            logger.error(error['message'])
-        sys.exit(1)
+        if 'errors' in j:
+            for error in j['errors']:
+                logger.error(error['message'])
+            sys.exit(1)
 
     print('GitHub page:', j['html_url'])
 
@@ -69,10 +71,6 @@ def entry_init_default():
     options = _parse_args()
     init_github(options.name)
     init_chaos(options.name)
-
-def main():
-    options = _parse_args()
-
 
 def _parse_args():
     """
@@ -102,6 +100,3 @@ def _parse_args():
         pass
 
     return options
-
-if __name__ == "__main__":
-    main()

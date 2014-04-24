@@ -10,17 +10,12 @@ import subprocess
 
 __docformat__ = "restructuredtext en"
 
-_config = None
-
 def get_config():
-    if _config is None:
-        configfile = os.path.expanduser('~/.config/project-tools/conf.ini')
-        config = configparser.ConfigParser()
-        config.read(configfile)
-        global _config
-        _config = config
+    configfile = os.path.expanduser('~/.config/project-tools/conf.ini')
+    config = configparser.ConfigParser()
+    config.read(configfile)
 
-    return _config
+    return config
 
 def find_git_repos(root='~'):
     '''

@@ -271,7 +271,7 @@ class Package(object):
         Checks ``apt-cache`` for the installed version of the package.
 
         I am aware that there is an ``apt`` module for Python which does the
-        very thing. But feel lazy and just get it out of the output and parse
+        very thing. But I feel lazy and just get it out of the output and parse
         that.
         '''
         logger.debug('Reading installed version of this package.')

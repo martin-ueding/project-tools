@@ -4,6 +4,11 @@
 Changelog
 #########
 
+v1.16
+    Released: 2014-04-24
+
+    - Write backport series into config file
+
 v1.15
     Released: 2014-03-23
 

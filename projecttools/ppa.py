@@ -22,6 +22,8 @@ import subprocess
 import sys
 import termcolor
 
+import projecttools
+
 __docformat__ = 'restructuredtext en'
 
 current_release = platform.dist()[2]
@@ -41,6 +43,8 @@ List of packages that should be uploaded.
 upgrades = []
 
 logger = logging.getLogger("ppa")
+
+config = projecttools.get_config()
 
 def check_for_debian():
     dist = platform.dist()
@@ -172,7 +176,7 @@ class Package(object):
 
         logger.debug('Backporting ...')
 
-        old_series_list = ['precise', 'quantal', 'trusty']
+        old_series_list = config['PPA']['backport to'].split()
 
         for old_series in old_series_list:
             subprocess.check_call([

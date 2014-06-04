@@ -117,6 +117,8 @@ class Package(object):
                     os.path.join(basedir, self.name, self.get_latest('.deb'))
                 )
 
+        self.clean_old()
+
     def build(self, source=True):
         '''
         Builds the given package, binary or source.
@@ -164,6 +166,29 @@ class Package(object):
         for suffix in suffixes:
             files = glob.glob('*{}'.format(suffix))
             for file_ in files:
+                logger.debug('Cleaning {}'.format(file_))
+                os.unlink(file_)
+
+    def clean_old(self):
+        '''
+        Remove everything that can be build.
+        '''
+        logger.debug('Cleaning old files')
+        suffixes = [
+            '.build',
+            '.changes',
+            '.deb',
+            '.dsc',
+            '.upload',
+        ]
+
+        for suffix in suffixes:
+            files = glob.glob('*{}'.format(suffix))
+            latest = self.get_latest(suffix)
+            for file_ in files:
+                if file_ == latest:
+                    logger.debug('Skipping ' + file_)
+                    continue
                 logger.debug('Cleaning {}'.format(file_))
                 os.unlink(file_)
 

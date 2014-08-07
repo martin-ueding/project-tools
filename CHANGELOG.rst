@@ -4,6 +4,11 @@
 Changelog
 #########
 
+v1.16.1
+    Released: 2014-08-07
+
+    - Handle error such that other repos can get pushed
+
 v1.16
     Released: 2014-04-24
 

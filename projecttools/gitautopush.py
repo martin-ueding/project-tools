@@ -192,6 +192,8 @@ def main():
             handle_repo(repo, options)
         except FileNotFoundError as e:
             print(e)
+        except subprocess.CalledProcessError as e:
+            print(e)
 
     print_stats()
 

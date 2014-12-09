@@ -20,7 +20,7 @@ def archive_tags(path, destination, pattern):
     tags = projecttools.git.get_tags()
 
     if len(tags) == 0:
-        logging.warning('Project %s has no tags, skipping', path)
+        logging.warning('Project %s has no tags, skipping', os.getcwd() if path == '.' else path)
         return
 
     for tag in tags:

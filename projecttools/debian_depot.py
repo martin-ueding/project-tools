@@ -9,13 +9,21 @@ import subprocess
 import os.path
 
 DEBUILD = os.path.expanduser('~/debuild')
+STAGING = os.path.expanduser('~/.cache/project-tools/debian-depot')
 
 
 def main():
     options = _parse_args()
 
+    binary_staging_path = os.path.join(STAGING, 'binary')
+
+    os.makedirs(STAGING, exist_ok=True)
+    os.makedirs(binary_staging_path, exist_ok=True)
+
     packages = glob.glob(os.path.join(DEBUILD, '*/*.deb'))
-    subprocess.check_call(['rsync', '-avhE'] + packages + ['df:subdomains/debian/binary/'])
+    subprocess.check_call(['rsync', '-avhE'] + packages + [binary_staging_path+'/'])
+    subprocess.check_call('dpkg-scanpackages "{staging}" /dev/null | gzip -9c > "{staging}/Packages.gz"'.format(staging=STAGING), shell=True)
+    subprocess.check_call(['rsync', '-avhE', '--delete', STAGING+'/', 'df:subdomains/debian/'])
 
 def _parse_args():
     '''

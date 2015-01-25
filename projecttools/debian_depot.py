@@ -24,6 +24,7 @@ def main():
     subprocess.check_call(['rsync', '-avhE'] + packages + [binary_staging_path+'/'])
     os.chdir(STAGING)
     subprocess.check_call('dpkg-scanpackages binary /dev/null | gzip -9c > Packages.gz', shell=True)
+    subprocess.check_call(['gpg', '--sign', '--detach-sign', '-o', 'Packages.gpg', 'Packages.gz'])
     subprocess.check_call(['rsync', '-avhE', '--delete', './', 'df:subdomains/debian/'])
 
 def _parse_args():

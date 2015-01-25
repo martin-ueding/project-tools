@@ -22,8 +22,9 @@ def main():
 
     packages = glob.glob(os.path.join(DEBUILD, '*/*.deb'))
     subprocess.check_call(['rsync', '-avhE'] + packages + [binary_staging_path+'/'])
-    subprocess.check_call('dpkg-scanpackages "{staging}" /dev/null | gzip -9c > "{staging}/Packages.gz"'.format(staging=STAGING), shell=True)
-    subprocess.check_call(['rsync', '-avhE', '--delete', STAGING+'/', 'df:subdomains/debian/'])
+    os.chdir(STAGING)
+    subprocess.check_call('dpkg-scanpackages binary /dev/null | gzip -9c > Packages.gz', shell=True)
+    subprocess.check_call(['rsync', '-avhE', '--delete', './', 'df:subdomains/debian/'])
 
 def _parse_args():
     '''

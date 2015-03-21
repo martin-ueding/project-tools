@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
+# Copyright © 2013-2015 Martin Ueding <dev@martin-ueding.de>
 
 from setuptools import setup, find_packages
 
@@ -20,6 +20,7 @@ setup(
             'git-repo-merge = projecttools.gitrepomerge:main',
             'git-spull = projecttools.git:submodule_pull',
             'github-repo-count = projecttools.githubrepocount:main',
+            'osc-auto-updater = projecttools.osc:main',
             'ppa = projecttools.ppa:main',
             'prolint = projecttools.lint.__init__:main',
             'python-find2 = projecttools.find2:main',

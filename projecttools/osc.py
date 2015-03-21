@@ -4,6 +4,17 @@
 # Copyright © 2012-2014 Martin Ueding <dev@martin-ueding.de>
 
 '''
+Creates new packages on the Open Build Service from upstream updates on my
+webseite.
+
+- Look at projects that are checked out in the home:martinueding project.
+- Get the index from bulk.martin-ueding.de and check whether there is a new
+  upstream version.
+- Download new tar achive.
+- Change version line in SPEC file.
+- Delete all other tar files.
+- Check changes into OSC.
+- Upload changes.
 '''
 
 import argparse

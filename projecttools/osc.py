@@ -44,9 +44,13 @@ def find_latest_upstream(name):
         if name_match == name
     ])
 
-    return 'http://bulk.martin-ueding.de/source/{}/{}_{}.tar.gz'.format(
-        name, name, '.'.join([str(x) for x in version_tuples[-1]])
+    filename = '{}_{}.tar.gz'.format(
+        name, '.'.join([str(x) for x in version_tuples[-1]])
     )
+
+    url = 'http://bulk.martin-ueding.de/source/{}/{}'.format(name, filename)
+
+    return filename, url
 
 
 def main():
@@ -63,8 +67,8 @@ def main():
     if options.dry_run:
         subprocess.check_call = projecttools.ppa.p
 
-    url = find_latest_upstream('thinkpad-scripts')
-    print(url)
+    filename, url = find_latest_upstream('thinkpad-scripts')
+    print(filename, url)
 
 
 def _parse_args():

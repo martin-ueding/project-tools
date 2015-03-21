@@ -61,13 +61,12 @@ def find_latest_upstream(name):
         if name_match == name
     ])
 
-    filename = '{}_{}.tar.gz'.format(
-        name, '.'.join([str(x) for x in version_tuples[-1]])
-    )
+    latest = '.'.join([str(x) for x in version_tuples[-1]])
 
+    filename = '{}_{}.tar.gz'.format(name, latest)
     url = 'http://bulk.martin-ueding.de/source/{}/{}'.format(name, filename)
 
-    return filename, url
+    return filename, url, latest
 
 
 def download_file(url, dest):
@@ -84,15 +83,49 @@ def download_file(url, dest):
 
 
 def ensure_latest_source(name):
-    filename, url = find_latest_upstream(name)
+    filename, url, latest = find_latest_upstream(name)
 
     # Abort here, if the file already exists.
     if os.path.isfile(path(name, filename)):
-        return False
+        return
+
+    old_tars = glob.glob(path(name, '*.tar.gz'))
+
+    for old_tar in old_tars:
+        print('Deleting', old_tar)
+        os.unlink(old_tar)
 
     download_file(url, path(name, filename))
 
-    return True
+    update_spec_file(name, latest)
+
+    check_stuff_in(name)
+
+
+def update_spec_file(name, latest):
+    spec_path = path(name, name + '.spec')
+
+    with open(spec_path) as f:
+        content = f.readlines()
+
+    for i in range(len(content)):
+        line = content[i]
+        if line.startswith('Version:'):
+            content[i] = '{:16s}{}\n'.format('Version:', latest)
+
+    with open(spec_path, 'w') as f:
+        for line in content:
+            f.write(line)
+
+def check_stuff_in(name):
+    old_cwd = os.getcwd()
+
+    os.chdir(path(name, '.'))
+
+    subprocess.call(['osc', 'add'] + glob.glob('*'))
+    subprocess.call(['osc', 'ci', '-m', 'New upstream version (automatic)'])
+
+    os.chdir(old_cwd)
 
 
 def main():

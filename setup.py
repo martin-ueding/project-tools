@@ -27,6 +27,7 @@ setup(
         ],
     },
     install_requires=[
-        'termcolor'
+        'requests',
+        'termcolor',
     ],
 )

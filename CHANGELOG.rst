@@ -1,8 +1,13 @@
-.. Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
+.. Copyright © 2013-2015 Martin Ueding <dev@martin-ueding.de>
 
 #########
 Changelog
 #########
+
+v1.17.0
+    Released: 2015-03-21
+
+    - Add OSC script
 
 v1.16.1
     Released: 2014-08-07

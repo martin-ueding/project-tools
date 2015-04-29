@@ -4,6 +4,12 @@
 Changelog
 #########
 
+v1.17.1
+    Released: 2015-04-29
+
+    - Fix the OSC script. It failed to check in the new tar archive since ``osc
+      add`` fails when the file is already under version control.
+
 v1.17.0
     Released: 2015-03-21
 

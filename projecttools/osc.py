@@ -82,18 +82,18 @@ def download_file(url, dest):
                 f.flush()
 
 
-def ensure_latest_source(name):
+def ensure_latest_source(name, force=False):
     filename, url, latest = find_latest_upstream(name)
 
     # Abort here, if the file already exists.
-    if os.path.isfile(path(name, filename)):
+    if os.path.isfile(path(name, filename)) and not force:
         return
 
     old_tars = glob.glob(path(name, '*.tar.gz'))
 
     for old_tar in old_tars:
         print('Deleting', old_tar)
-        os.unlink(old_tar)
+        subprocess.call(['osc', 'rm', old_tar])
 
     download_file(url, path(name, filename))
 
@@ -122,7 +122,8 @@ def check_stuff_in(name):
 
     os.chdir(path(name, '.'))
 
-    subprocess.call(['osc', 'add'] + glob.glob('*'))
+    for filename in glob.glob('*'):
+        subprocess.call(['osc', 'add', filename])
     subprocess.call(['osc', 'ci', '-m', 'New upstream version (automatic)'])
 
     os.chdir(old_cwd)
@@ -148,7 +149,7 @@ def main():
     for name in os.listdir(base):
         if name.startswith('.'):
             continue
-        ensure_latest_source(name)
+        ensure_latest_source(name, options.force)
 
 
 def _parse_args():
@@ -162,6 +163,7 @@ def _parse_args():
     parser.add_argument('-n', dest='dry_run', action='store_true', default=False, help='dry run')
     parser.add_argument('-u', dest='upgrade', action='store_true', default=False, help='use “dpkg -i” to install packages')
     parser.add_argument('-v', dest='verbose', action='count', help='more output (can be used multiple times)')
+    parser.add_argument('-f', dest='force', action='store_true')
     parser.add_argument('base')
     #parser.add_argument('--version', action='version', version='<the version>')
 

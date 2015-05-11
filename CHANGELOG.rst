@@ -4,6 +4,11 @@
 Changelog
 #########
 
+v1.18.0
+    Released: 2015-05-11
+
+    - Remove repos on chaos.
+
 v1.17.1
     Released: 2015-04-29
 

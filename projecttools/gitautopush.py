@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Copyright © 2013-2014 Martin Ueding <dev@martin-ueding.de>
+# Copyright © 2013-2015 Martin Ueding <dev@martin-ueding.de>
 
 import argparse
 import glob
@@ -20,7 +20,7 @@ __docformat__ = "restructuredtext en"
 
 logger = logging
 
-mirrors = ["chaos", "github"]
+mirrors = ["github"]
 
 status = {
     "ok": 0,
@@ -118,6 +118,13 @@ def init(repo, remotes):
 def push(repo, remotes):
     global status
     for remote in remotes:
+        if remote == 'chaos':
+            url = subprocess.check_output(['git', 'config', 'remote.chaos.url'])
+            if b'chaos:public_html/git/' in url:
+                termcolor.cprint("{:8} {:12} {}".format("RM", remote, repo), 'magenta')
+                subprocess.check_output(['git', 'remote', 'rm', 'chaos'])
+
+
         if not remote in mirrors:
             continue
 

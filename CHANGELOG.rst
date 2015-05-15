@@ -4,6 +4,11 @@
 Changelog
 #########
 
+v1.18.1
+    Released: 2015-05-15
+
+    - Run ``osc up`` before doing anything else.
+
 v1.18.0
     Released: 2015-05-11
 

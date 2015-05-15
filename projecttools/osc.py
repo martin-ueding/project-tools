@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Copyright © 2012-2014 Martin Ueding <dev@martin-ueding.de>
+# Copyright © 2012-2015 Martin Ueding <dev@martin-ueding.de>
 
 '''
 Creates new packages on the Open Build Service from upstream updates on my
@@ -83,6 +83,11 @@ def download_file(url, dest):
 
 
 def ensure_latest_source(name, force=False):
+    old_cwd = os.getcwd()
+    os.chdir(path(name, '.'))
+    subprocess.check_call(['osc', 'up'])
+    os.chdir(old_cwd)
+
     filename, url, latest = find_latest_upstream(name)
 
     # Abort here, if the file already exists.
@@ -119,7 +124,6 @@ def update_spec_file(name, latest):
 
 def check_stuff_in(name):
     old_cwd = os.getcwd()
-
     os.chdir(path(name, '.'))
 
     for filename in glob.glob('*'):

@@ -124,33 +124,33 @@ def push(repo, remotes):
         if not repo in last_commits:
             last_commits[repo] = {}
 
-        if remote in last_commits[repo]:
-            last_commit = last_commits[repo][remote]
-        else:
-            last_commit = ""
+        if remote not in last_commits[repo]:
+            last_commits[repo][remote] = []
 
         migrate_to_mirror(repo, remote)
 
-        try:
-            master_commit = subprocess.check_output(["git", "rev-parse", "refs/heads/master"]).decode().strip()
-        except subprocess.CalledProcessError as e:
-            print(e)
-            raise
-        else:
-            #print("master:", master_commit, "last", last_commit)
-            if master_commit == last_commit:
-                status["ok"] += 1
-                termcolor.cprint("{:8} {:12} {}".format("OK", remote, repo), 'green')
+        commits = subprocess.check_output(["git", "rev-parse", "--branches"]).decode().strip().split()
+
+        needs_push = sorted(last_commits[repo][remote]) != sorted(commits)
+
+        #print(sorted(last_commits[repo][remote]))
+        #print(sorted(commits))
+        #print(needs_push)
+
+        if needs_push:
+            status["push"] += 1
+            termcolor.cprint("{:8} {:12} {}".format("PUSH", remote, repo), 'yellow')
+
+            try:
+                subprocess.check_call(["git", "push", remote, "--mirror"])
+            except subprocess.CalledProcessError as e:
+                print(e)
             else:
-                status["push"] += 1
-                termcolor.cprint("{:8} {:12} {}".format("PUSH", remote, repo), 'yellow')
-                try:
-                    subprocess.check_call(["git", "push", remote, "--mirror"])
-                except subprocess.CalledProcessError as e:
-                    print(e)
-                else:
-                    last_commits[repo][remote] = master_commit
-                    save_last_commits()
+                last_commits[repo][remote] = commits
+                save_last_commits()
+        else:
+            status["ok"] += 1
+            termcolor.cprint("{:8} {:12} {}".format("OK", remote, repo), 'green')
 
 
 def find_remote_name(repo, remotes):

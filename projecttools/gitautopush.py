@@ -77,7 +77,7 @@ def handle_repo(repo, options):
     os.chdir(repo.replace('.git', ''))
     remotes = find_remotes(repo)
 
-	# If there are no remotes in this repo, there is nothing more to do.
+    # If there are no remotes in this repo, there is nothing more to do.
     if len(remotes) == 0:
         return
 
